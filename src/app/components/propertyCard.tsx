@@ -2,7 +2,24 @@ import React from "react";
 import Button from "./button";
 import Image from "next/image";
 
-const PropertyCard = ({ image }: { image?: string }) => {
+const PropertyCard = ({
+  image,
+  title,
+  price,
+  location,
+  bedrooms,
+  bathrooms,
+  reactions,
+}: {
+  image?: string;
+  title?:string;
+  price?:number;
+  location?:string;
+  bedrooms?:number;
+  bathrooms?:number;
+  reactions?:number;
+
+}) => {
   return (
     <div className=" shadow-lg rounded-b-2xl ">
       <div
@@ -16,28 +33,28 @@ const PropertyCard = ({ image }: { image?: string }) => {
         </div>
       </div>
       <div className="px-6 py-4 ">
-        <h3 className="text-2xl font-medium">Meadowbrook</h3>
+        <h3 className="lg:text-sm xl:text-xl font-medium">{title}</h3>
         <span className="text-xl text-[#5138ED] py-3 inline-block font-medium ">
-          $10,200,000
+        FCFA {price}
         </span>
         <div className="flex place-items-center pt-2 pb-3 gap-4">
           <Image src={"/location.png"} alt="location" width={16} height={20} />
           <p className="text-[#7D8BA2] text-xs md:text-md font-medium">
-            30E MEADOWBROOK DRIVE, MONTECITO,CA
+           {location}
           </p>
         </div>
         <div className="w-full flex justify-between items-center py-3 border-t-2">
           <div className="flex place-items-center pt-2 gap-2">
             <Image src={"/bed.png"} alt="location" width={24} height={24} />
-            <p className="text-[#7D8BA2] text-xs font-medium">5 Beds</p>
+            <p className="text-[#7D8BA2] text-xs font-medium">{bedrooms} Beds</p>
           </div>
           <div className="flex place-items-center pt-2 gap-2">
             <Image src={"/bath.png"} alt="location" width={24} height={24} />
-            <p className="text-[#7D8BA2] text-xs font-medium">6 Baths</p>
+            <p className="text-[#7D8BA2] text-xs font-medium">{bathrooms} Baths</p>
           </div>
           <div className="flex place-items-center pt-2 gap-2">
             <Image src={"/square.png"} alt="location" width={24} height={24} />
-            <p className="text-[#7D8BA2] text-xs font-medium">7,143 Sq.Ft</p>
+            <p className="text-[#7D8BA2] text-xs font-medium">{reactions}</p>
           </div>
         </div>
       </div>
