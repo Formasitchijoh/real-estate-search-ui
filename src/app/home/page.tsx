@@ -15,7 +15,6 @@ const Home = () => {
 
   return (
     <div className="">
-      <NavMenu/>
       <HeroSection/>
       <CompaniesSection/>
       <AboutSection/>
@@ -24,7 +23,6 @@ const Home = () => {
       <Neighboorhoods/>
       <WorkWithUs/>
       <Testimonials/>
-      <Footer/>
     </div>
   );
 };
