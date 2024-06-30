@@ -10,9 +10,8 @@ import Link from "next/link";
 
 const NavMenu = () => {
   const [showMenu, setShowMenu] = useState(false);
-  const [token, setToken] = useState(localStorage.getItem('token'))
-
-console.log(token);
+  //const value = localStorage.getItem('token')
+  const [token, setToken] = useState(false)
 
   return (
     <nav className="flex px-2 md:px-4 lg:px-16 justify-between items-center py-4 md:py-12">

@@ -9,13 +9,9 @@ const Listings = () => {
         method:"GET"
     }).then((response) => response.json())
     .then((result) =>{
-        console.log('new listings');
         setlistings(result)
-        console.log(result);
     })
    },[])
-
-   console.log(listings);
    
   return (
     <div>

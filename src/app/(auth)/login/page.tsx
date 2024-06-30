@@ -60,14 +60,11 @@ const SignIn = () => {
               }
             )
           }).then( async(response) => {
-             /// console.log(response);
               const result = await response.json()
               if(response.status == 200){
                 localStorage.setItem('user', JSON.stringify(result))
                 router.push("/home");
-              }
-              console.log(result);
-              
+              }              
           })    
     } catch (error) {
         throw new Error(error);

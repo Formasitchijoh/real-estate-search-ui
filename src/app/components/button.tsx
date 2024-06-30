@@ -12,6 +12,7 @@ const Button = ({
   ishow,
   className,
   propertyStatus,
+  onClick
 }: {
   primary?: boolean;
   secondary?: boolean;
@@ -21,11 +22,13 @@ const Button = ({
   ishow?:boolean;
   className?:string;
   propertyStatus?:boolean;
-  text:string
+  text:string;
+  onClick?:() => void
 
 }) => {
   return (
     <button
+    onClick={onClick}
       className={cn( ` text-sm sm:text-md font-medium font-serif text-black ${className}`,
         ishow && 'hidden',
         primary && `px-3 py-2  lg:py-3 lg:px-4  rounded-xl  bg-[#5138ED] text-white ${propertyStatus ? 'lg:py-2 lg:px-4' : ''}`,

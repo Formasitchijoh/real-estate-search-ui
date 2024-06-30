@@ -34,21 +34,17 @@ const SignUp = () => {
         password: password,
       }),
     }).then(async (response) => {
-      /// console.log(response);
       const result = await response.json();
       if (response.status == 200) {
         localStorage.setItem("token", result.token);
         router.push("/home");
         return response.status;
       }
-      console.log(result);
     });
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log('user\n', user);
-    
+    e.preventDefault();    
     fetch("http://127.0.0.1:8000/api/accounts/auth/register/", {
       method: "POST",
       headers: {
@@ -61,13 +57,10 @@ const SignUp = () => {
         role: user.role,
       }),
     }).then((response) => {
-      console.log(response.status);
       if (response.status == 201) {
         handleLogin(user.userName, user.password);
       }
     });
-
-    console.log(user.userName.replaceAll(" ", "-"));
   };
   return (
     <div className="W-[100vw] md:h-[100vh] flex flex-col justify-center items-center ">
@@ -184,7 +177,7 @@ const SignUp = () => {
               className="flex w-full py-4 bg-[#ffffff] rounded-lg shadow-xl gap-2  flex-row justify-center items-center "
             >
               <FacebookIcon />
-              <span className=" text-xl md:text-2xl font-medium"> Google</span>
+              <span className=" text-xl md:text-2xl font-medium">Google</span>
             </button>
           </div>
 

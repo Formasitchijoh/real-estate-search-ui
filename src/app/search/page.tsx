@@ -11,10 +11,8 @@ const Search = () => {
          method:"GET"
      }).then((response) => response.json())
      .then((result) =>{
-        // console.log(result);
          setlistings(result.Listings)
          setScores(result.Scores)
-         console.log(result.Listing);
      })
     },[])
  
@@ -23,13 +21,10 @@ const Search = () => {
             method:"GET"
         }).then((response) => response.json())
         .then((result) =>{
-           // console.log(result);
             setlistings(result.Listings)
             setScores(result.Scores)
-            console.log(result.Listing);
         })  
     }
-    console.log(listings);
   return (
     <div>
        <div className="w-[80%] mx-auto flex gap-5 justify-center items-center bg-slate-300 m-5 mb-10">

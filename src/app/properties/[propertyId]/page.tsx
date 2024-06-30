@@ -17,6 +17,9 @@ import Image from "next/image";
 import Button from "@/app/components/button";
 import PropertyCard from "@/app/components/propertyCard";
 import Link from "next/link";
+import toast, { Toaster } from 'react-hot-toast';
+
+
 const Property = () => {
   const [open, setOpen] = React.useState(false);
   const captionsRef = React.useRef(null);
@@ -33,32 +36,56 @@ const Property = () => {
   console.log(propertyId);
   console.log(pathname);
 
+
+  const notify = () => toast.success('Item Bookmarked successfully.',{
+    duration: 4000,
+    position: 'top-center',
+    // Custom Icon
+    icon: '👏',
+  
+    // Change colors of success/error/loading icon
+    iconTheme: {
+      primary: '#000',
+      secondary: '#fff',
+    },
+  
+    // Aria
+    ariaProps: {
+      role: 'status',
+      'aria-live': 'polite',
+    },
+  });
+
+  //get listing and the corresponding images
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/api/listings/list/2/`, {
+    fetch(`http://127.0.0.1:8000/api/listings/list/${propertyId}`, {
       method: "GET",
     })
       .then((response) => response.json())
       .then((result) => {
-        // console.log(result);
+        //console.log(result.listing_image[0].image);
         setlisting(result);
-        console.log(result);
-        console.log(result.title);
 
       });
-      fetch('http://127.0.0.1:8000/api/listings/images?id=15',{
+      //fetch('http://127.0.0.1:8000/api/listings/images?id=20',{
 
-      })
-      .then((response) => response.json())
-      .then((result) => {
+      //})
+      //.then((response) => response.json())
+      //.then((result) => {
         // console.log(result);
-        setListingImages(result)
-        console.log('images\n\n', result);
+      //  setListingImages(result)
 
-      });
+      //});
   }, []);
 
+  //get users recommendation as per this property
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/recommendations/user/?user_id=1", {
+    const user = localStorage.getItem('user')
+    //console.log(JSON.parse(user as unknown as string));
+    const { id, token,username, role} = JSON.parse(user as unknown as string)
+    console.log(id, token, username, role);
+    
+    fetch("http://127.0.0.1:8000/api/recommendations/user/?user_id=3", {
       method: "GET",
     })
       .then((response) => response.json())
@@ -68,6 +95,39 @@ const Property = () => {
         console.log(result.Listing);
       });
   }, []);
+
+  //create a bookmark
+  const handleCreateBookMark = () =>{
+    const user = localStorage.getItem('user')
+    //console.log(JSON.parse(user as unknown as string));
+    const { id, token,username, role} = JSON.parse(user as unknown as string)
+    console.log(id, token, username, role);
+    console.log('bookmark details', id, listing.id);
+    
+    fetch("http://127.0.0.1:8000/api/bookmarks/", {
+      method: "POST",
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify(
+        {
+          listing: [200],
+          user:id
+      }
+      )
+    })
+      .then( async(result) => {
+        const response = await result.json()
+        if (result.status){
+          alert(result.status)
+          notify()
+          console.log(result.status);
+          console.log(response);
+        }
+      });
+  }
+  
+  console.log('image\n', listing?.listing_image[0].image);
   
   return (
     <>
@@ -75,15 +135,15 @@ const Property = () => {
       <div className="w-full md:w-[50%] mx-auto h-[60vh]">
     <div className="py-4 block md:hidden">
     <h2 className="text-xl bg-[#F7F7FD] rounded-xl px-3 py-6  lg:py-3 lg:px-6 sm:text-2xl md:text-3xl lg:text-3xl text-black font-medium tracking-tight leading-snug">
-    {listing?.title}  </h2>
+    {listing?.title} {propertyId} </h2>
     </div>
-       {(listingImages?.length > 0) &&
+    {listing?.listing_image &&
        <Lightbox
        className=""
          open={true}
          close={() => setOpen(false)}
-         slides={listingImages?.map((image) => (
-           {src:image}
+         slides={listing?.listing_image?.map((images: { image: any; }) => (
+           {src:images.image}
          ))}
          plugins={[Captions, Fullscreen, Inline, Thumbnails]}
          captions={{ ref: captionsRef }}
@@ -99,6 +159,7 @@ const Property = () => {
          }}
        />
        }
+
       </div>
       <div className="w-full h-[60vh] py-8 flex flex-col justify-start lg:px-8 items-start pl-2 md:w-[80%]">
       <h2 className="text-xl bg-[#F7F7FD] rounded-xl px-3 py-6  lg:py-3 lg:px-6 sm:text-2xl md:text-3xl lg:text-3xl text-black font-medium tracking-tight leading-snug">
@@ -129,7 +190,7 @@ const Property = () => {
 
         <div className='flex px-2 gap-4 w-full place-content-start py-8 mt-8 md:mt-6'>
                 <Button text="Request Property" primary={true}/>
-                <Button className="text-black" text="BookMark property" tetiary={true}/>
+                <Button onClick={handleCreateBookMark} className="text-black" text="BookMark property" tetiary={true}/>
             </div>
       </div>
       </div>
@@ -154,6 +215,7 @@ const Property = () => {
               />
             </Link>
           ))}
+         <Toaster />
       </div>
     </>
   );

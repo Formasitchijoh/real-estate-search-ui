@@ -1,9 +1,26 @@
-
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import NavMenu from "./components/navbar";
 import Footer from "./components/footer";
+import StateReducer from "./context/StateReducers";
+import { initialStates } from "./context/StateReducers";
+import { StateProvider } from "./context/StateContext";
+import HomePage from "./home/page";
+type State = {
+  _id: string;
+  title: string;
+  client: string;
+  images: Array<string>;
+  gitHubLink: string;
+  deploymentLink: string;
+};
+type Action = {
+  type: string;
+  payload: any;
+};
+
+type Reducer = (state: State[], action: Action) => State[];
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -16,13 +33,22 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  console.log('value of the initial state', initialStates);
+  
   return (
     <html lang="en">
       <body className={inter.className}>
-      <NavMenu/>
-        {children}
-      <Footer/>
-        </body>
+        <StateProvider
+          reducer={StateReducer as unknown as Reducer}
+          initialState={initialStates}
+        >
+          <NavMenu />
+          {children}
+          <Footer />{" "}
+        </StateProvider>
+      </body>
     </html>
   );
 }
+
