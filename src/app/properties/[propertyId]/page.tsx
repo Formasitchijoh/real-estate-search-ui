@@ -112,7 +112,7 @@ const Property = () => {
     //console.log(JSON.parse(user as unknown as string));
     const { id, token,username, role} = JSON.parse(user as unknown as string)
     console.log(id, token, username, role);
-    console.log('bookmark details', id, listing.id);
+    console.log('bookmark details', id, listing, propertyId);
     
     fetch("http://127.0.0.1:8000/api/bookmarks/", {
       method: "POST",
@@ -121,7 +121,7 @@ const Property = () => {
       },
       body:JSON.stringify(
         {
-          listing: [200],
+          listing: [propertyId],
           user:id
       }
       )
@@ -129,7 +129,6 @@ const Property = () => {
       .then( async(result) => {
         const response = await result.json()
         if (result.status){
-          alert(result.status)
           notify()
           console.log(result.status);
           console.log(response);

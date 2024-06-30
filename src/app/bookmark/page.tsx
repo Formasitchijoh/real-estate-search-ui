@@ -31,7 +31,7 @@ const Page = () => {
         {
           listings?.length > 0 ? (
             listings?.slice(0, 10)?.map((listing, index) => (
-              <Link key={index} href={`/properties/${listing.listing}`}>
+              <Link key={index} href={`/properties/${listing.id}`}>
                 <PropertyCard
                   title={listing.title}
                   image={listing.images[0]}
