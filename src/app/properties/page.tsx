@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import Properties from "../components/propertiesSection";
 import PropertyCard from "../components/propertyCard";
 import Lightbox from "yet-another-react-lightbox";
@@ -17,6 +17,7 @@ const Page = () => {
 
 
   const handleSearch = () => {
+    localStorage.setItem('query',query)
     fetch(`http://127.0.0.1:8000/api/listings/search?query=${query}`, {
       method: "GET",
     })
@@ -94,7 +95,7 @@ const handlePageChange = (pageNumber:number) => {
         {
           listings &&
           listings?.slice(0, 10)?.map((listing, index) => (
-            <Link key={index} href={`/properties/${listing.id}`}>
+            <Link key={index} href={`/properties/${listing.listing ? listing.listing : listing.id}`}>
               <PropertyCard
                 image={search ? listing.images[0] : listing.listing_image[1]?.image}
                 title={listing.title}

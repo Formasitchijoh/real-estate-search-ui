@@ -73,8 +73,6 @@ const SignIn = () => {
   }
   return (
     <div className="w-[100vw] md:h-[100vh] flex flex-col justify-center items-center ">
-        <button onClick={notify}>Make me a toast</button>
-        <Toaster />
       <div
         style={{
           boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",

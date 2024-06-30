@@ -5,11 +5,14 @@ import PropertyCard from "../components/propertyCard";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import Link from "next/link";
+
+
 const Page = () => {
   const [listings, setlistings] = useState<Array<any>>();
 
   useEffect(() => {
     const user = localStorage.getItem('user')
+    if(user){
     //console.log(JSON.parse(user as unknown as string));
     const { id, token,username, role} = JSON.parse(user as unknown as string)
     console.log(id, token, username, role);
@@ -22,6 +25,7 @@ const Page = () => {
         setlistings(result);
         console.log(result);
       });
+    }
   }, []);
 
   console.log(listings);

@@ -13,7 +13,7 @@ const NavMenu = () => {
 
   //const token = localStorage.getItem('token')
   const user = localStorage.getItem('user')
-  const { id, token,username, role} = JSON.parse(user as unknown as string)
+  const { id, token,username, role} = user ? JSON.parse(user as unknown as string) : ' '
   console.log(id, token, username, role);
   //const [token, setToken] = useState(false)
 
