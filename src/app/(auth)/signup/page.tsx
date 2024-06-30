@@ -45,6 +45,8 @@ const SignUp = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();    
+    console.log('\n\nuser\n\nuser', user);
+    
     fetch("http://127.0.0.1:8000/api/accounts/auth/register/", {
       method: "POST",
       headers: {
@@ -58,6 +60,7 @@ const SignUp = () => {
       }),
     }).then((response) => {
       if (response.status == 201) {
+        localStorage.setItem('user', JSON.stringify(user))
         handleLogin(user.userName, user.password);
       }
     });

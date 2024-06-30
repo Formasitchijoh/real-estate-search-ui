@@ -10,8 +10,12 @@ import Link from "next/link";
 
 const NavMenu = () => {
   const [showMenu, setShowMenu] = useState(false);
-  //const value = localStorage.getItem('token')
-  const [token, setToken] = useState(false)
+
+  //const token = localStorage.getItem('token')
+  const user = localStorage.getItem('user')
+  const { id, token,username, role} = JSON.parse(user as unknown as string)
+  console.log(id, token, username, role);
+  //const [token, setToken] = useState(false)
 
   return (
     <nav className="flex px-2 md:px-4 lg:px-16 justify-between items-center py-4 md:py-12">
@@ -58,10 +62,12 @@ const NavMenu = () => {
         </div>
       </ul>
       <div className="hidden sm:flex justify-between items-center gap-4">
-        <h3 className="hidden lg:flex">
+        {
+          !token &&         <h3 className="hidden lg:flex">
           <Link href={'/signup'} className="text-[#7D8BA2] hover:text-[#5138ED] text-xl font-medium">SignUp</Link>
           <span className="text-2xl font-bold px-1">/</span> <Link href={'/login'} className="text-[#7D8BA2] hover:text-[#5138ED]  text-xl font-medium">Login</Link>
         </h3>
+        }
         <Button text="Contact Us" primary={true} />
       </div>
     </nav>

@@ -14,6 +14,8 @@ const Page = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+
+
   const handleSearch = () => {
     fetch(`http://127.0.0.1:8000/api/listings/search?query=${query}`, {
       method: "GET",

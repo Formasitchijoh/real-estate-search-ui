@@ -9,8 +9,8 @@ import FacebookIcon from '../icons/FacebookIcon'
 
 const Footer = () => {
   return (
-   <div className='w-[100vw] px-4 xl:px-32 mx-auto bg-[#F7F7FD]'>
-     <div className='py-16 w-full gap-2 grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 '>
+   <div className='w-[100vw] bottom-0 px-4 xl:px-32 mx-auto bg-[#F7F7FD]'>
+     <div className='py-16 w-full  gap-2 grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 '>
         <ul className='md:flex hidden flex-col w-full place-items-center md:place-items-start'>
             <Logo/>
         </ul>

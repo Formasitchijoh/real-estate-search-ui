@@ -29,20 +29,27 @@ const Page = () => {
     <div>
       <div className="grid w-[100%] sm:w-[90%] lg:w-[80%] mx-auto md:grid-cols-2 px-4 md:px-0 lg:grid-cols-3 pb-16 gap-6">
         {
-          listings &&
-          listings?.slice(0, 10)?.map((listing, index) => (
-            <Link key={index} href={`/properties/${listing.id}`}>
-              <PropertyCard
-                title={listing.title}
-                image={listing.images[0]}
-                bedrooms={listing.bedroom}
-                bathrooms={listing.bathrooms}
-                price={listing.price}
-                location={`${listing.town}, ${listing.location} `}
-                reactions={listing.reactions}
-              />
-            </Link>
-          ))}
+          listings?.length > 0 ? (
+            listings?.slice(0, 10)?.map((listing, index) => (
+              <Link key={index} href={`/properties/${listing.listing}`}>
+                <PropertyCard
+                  title={listing.title}
+                  image={listing.images[0]}
+                  bedrooms={listing.bedroom}
+                  bathrooms={listing.bathrooms}
+                  price={listing.price}
+                  location={`${listing.town}, ${listing.location} `}
+                  reactions={listing.reactions}
+                />
+              </Link>
+            ))
+          ):(
+            <div className="flex w-[80vw] mx-auto h-[50vh] py-10 justify-center items-center">
+                <h2 className="text-2xl md:text-4xl lg:text-5xl text-black font-medium tracking-tight leading-snug">
+                No Bookmarks yet </h2>
+            </div>
+          )
+        }
       </div>
     </div>
   );

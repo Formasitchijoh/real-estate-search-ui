@@ -30,6 +30,8 @@ const Property = () => {
   const [listing, setlisting] = useState<any>();
   const [listingImages, setListingImages] = useState<Array<string>>()
   const [listings, setlistings] = useState<Array<any>>();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const pathname = usePathname();
   const propertyId = pathname.split("/").pop();
@@ -63,38 +65,46 @@ const Property = () => {
     })
       .then((response) => response.json())
       .then((result) => {
-        //console.log(result.listing_image[0].image);
         setlisting(result);
-
       });
-      //fetch('http://127.0.0.1:8000/api/listings/images?id=20',{
-
-      //})
-      //.then((response) => response.json())
-      //.then((result) => {
-        // console.log(result);
-      //  setListingImages(result)
-
-      //});
   }, []);
 
   //get users recommendation as per this property
-  useEffect(() => {
-    const user = localStorage.getItem('user')
-    //console.log(JSON.parse(user as unknown as string));
-    const { id, token,username, role} = JSON.parse(user as unknown as string)
-    console.log(id, token, username, role);
+    //console.log(listings);
+    const fetchListings = async () => {
+      try {
+        const user = localStorage.getItem('user')
+        const { id, token,username, role} = JSON.parse(user as unknown as string)
+        console.log(id, token, username, role);
+        fetch(`http://127.0.0.1:8000/api/recommendations/user/?user_id=${id}`, {
+          method: "GET",
+        })
+          .then((response) => response.json())
+          .then((result) => {
+            // console.log(result);
+            setlistings(result.Listings);
+            console.log(result.Listing);
+          });
+       
+      } catch (error) {
+        console.error('Error fetching listings:', error);
+      }
+    };
     
-    fetch("http://127.0.0.1:8000/api/recommendations/user/?user_id=3", {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        // console.log(result);
-        setlistings(result.Listings);
-        console.log(result.Listing);
-      });
-  }, []);
+    useEffect(() => {
+      const user = localStorage.getItem('user')
+        const { id, token,username, role} = JSON.parse(user as unknown as string)
+        console.log(id, token, username, role);
+        fetch(`http://127.0.0.1:8000/api/recommendations/user/?user_id=${id}`, {
+          method: "GET",
+        })
+          .then((response) => response.json())
+          .then((result) => {
+            // console.log(result);
+            setlistings(result.Listings);
+            console.log(result.Listing);
+          });
+    }, [currentPage]);
 
   //create a bookmark
   const handleCreateBookMark = () =>{
@@ -127,6 +137,26 @@ const Property = () => {
       });
   }
   
+  useEffect(() => {
+    // Restore state from local storage on component mount
+    const storedCurrentPage = localStorage.getItem('currentPage');
+    const storedTotalPages = localStorage.getItem('totalPages');
+    if (storedCurrentPage && storedTotalPages) {
+      setCurrentPage(parseInt(storedCurrentPage));
+      setTotalPages(parseInt(storedTotalPages));
+    }
+  }, []);
+  
+  useEffect(() => {
+    // Save state to local storage when it changes
+    localStorage.setItem('currentPage', currentPage.toString());
+    localStorage.setItem('totalPages', totalPages.toString());
+  }, [currentPage, totalPages]);
+  
+  const handlePageChange = (pageNumber:number) => {
+    setCurrentPage(pageNumber);
+    fetchListings()
+  };
   console.log('image\n', listing?.listing_image[0].image);
   
   return (
@@ -203,7 +233,7 @@ const Property = () => {
         {
           listings &&
           listings?.slice(0, 10)?.map((listing, index) => (
-            <Link key={index} href={`/properties/${listing.id}`}>
+            <Link key={index} href={`/properties/${listing.listing}`}>
               <PropertyCard
                 image={listing.images[1]}
                 title={listing.title}
@@ -217,6 +247,18 @@ const Property = () => {
           ))}
          <Toaster />
       </div>
+      <div className="w-[100vw] flex justify-center items-center ">
+      {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+        <button
+          key={pageNumber}
+          onClick={() => handlePageChange(pageNumber)}
+          disabled={currentPage === pageNumber}
+          className="bg-blue-900 px-10 py-2 rounded-lg m-2 text-white"
+        >
+          {pageNumber}
+        </button>
+      ))}
+    </div>
     </>
   );
 };
