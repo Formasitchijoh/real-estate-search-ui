@@ -8,7 +8,7 @@ export default function Home() {
         <input type="search" className="w-full h-10 rounded-2xl border-gray-800 px-5" />
       </div>
         <div className="w-[80%] mx-auto m-5">          
-       <Listings/>
+      {/* <Listings/> */}
         </div>
     </main>
   );

@@ -148,7 +148,7 @@ const Property = () => {
             alert("out");
           });
       }
-    }, 10000000);
+    }, 100000000);
   }, [listing, propertyId]);
   //create a bookmark
   const handleCreateBookMark = () => {

@@ -1,1 +1,2 @@
 https://react-hot-toast.com/docs
+https://medium.com/@tech_with_mike/elasticsearch-with-django-quick-tutorial-with-video-e75263f813c7

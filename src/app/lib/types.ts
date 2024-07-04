@@ -6,3 +6,8 @@ export interface UserEntity {
     confirmpassword:string;
 
   }
+export interface PaymentEntity {
+    amount: number;
+    currency: string;
+   
+  }
