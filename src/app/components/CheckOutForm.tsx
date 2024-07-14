@@ -1,6 +1,6 @@
 "use client";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ApiService from "../api";
 
 const CheckoutForm = () => {
@@ -8,6 +8,19 @@ const CheckoutForm = () => {
   const [email, setEmail] = useState("");
   const stripe = useStripe();
   const elements = useElements();
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+
+    if (user) {
+      const { id, token, username, role,email } = JSON.parse(
+        user as unknown as string
+      );
+      setEmail(email)
+  
+  }
+  }, [])
+  
 
   // Handle real-time validation errors from the CardElement.
   const handleChange = (event: any) => {
@@ -22,6 +35,8 @@ const CheckoutForm = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const cardElement = elements?.getElement(CardElement);
+    console.log("\n\n i know you are in there the card element functions as a useContext\n", cardElement);
+    
 
     if (stripe && cardElement) {
       try {
@@ -53,9 +68,10 @@ const CheckoutForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="stripe-form w-[80%] mx-auto ">
+    <form onSubmit={handleSubmit} className="stripe-form w-[90%] md:w-[80%] shadow my-10 p-4 lg:w-[50%] mx-auto h-[50vh] ">
+      <h1 className="text-2xl font-semibold py-8 text-center">Complete Payment</h1>
       <div className="form-row">
-        <label htmlFor="email " className="text-md font-semibold">
+        <label htmlFor="email " className="text-md font-normal">
           Email Address
         </label>
         <input
@@ -72,7 +88,7 @@ const CheckoutForm = () => {
         />
       </div>
       <div className="form-row py-4">
-        <label className="text-md font-semibold" htmlFor="card-element">
+        <label className="text-md font-normal" htmlFor="card-element">
           Credit or debit card
         </label>
         <CardElement
@@ -86,7 +102,7 @@ const CheckoutForm = () => {
       </div>
       <button
         type="submit"
-        className="submit-btn my-8 bg-sky-950 text-white text-md px-8 py-4 "
+        className="submit-btn my-8 bg-[#5138ED] text-white text-md px-3 py-2  lg:py-3 lg:px-4  rounded-xl  "
       >
         Submit Payment
       </button>

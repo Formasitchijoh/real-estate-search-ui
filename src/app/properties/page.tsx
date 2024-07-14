@@ -38,6 +38,8 @@ const Page = () => {
         const { id, token, username, role } = JSON.parse(
           user as unknown as string
         );
+        console.log("\n\n user\n\n", user);
+        
         fetch(`http://127.0.0.1:8000/api/listings/content?user_id=${id}`, {
           method: "GET",
         })
