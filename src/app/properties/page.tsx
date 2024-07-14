@@ -9,66 +9,6 @@ import axios from "axios";
 import SearchIcon from "../icons/SearchIcon";
 import AdjustMentsIcon from "../icons/AdjustMentsIcon";
 import { cn } from "../lib/utils";
-import { getUserLocation } from "./helper";
-
-
-// Extend the Window interface to include the initMap function
-declare global {
-  interface Window {
-    initMap: () => void;
-  }
-}
-
-const loadScript = (url: string) => {
-  const script = document.createElement('script');
-  script.src = url;
-  script.async = true;
-  script.defer = true;
-  document.body.appendChild(script);
-};
-
-export const MapComponent: React.FC = () => {
-  const mapRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    // Define the initMap function on the window object
-    window.initMap = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          const userLocation = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-
-          if (mapRef.current) {
-            const map = new google.maps.Map(mapRef.current, {
-              center: userLocation,
-              zoom: 15,
-            });
-
-            new google.maps.Marker({
-              position: userLocation,
-              map: map,
-            });
-
-            // Print the user's location
-            console.log(`User's Location: Latitude: ${userLocation.lat}, Longitude: ${userLocation.lng}`);
-          }
-        }, (error) => {
-          console.error('Error getting the location', error);
-        });
-      } else {
-        alert('Geolocation is not supported by this browser.');
-      }
-    };
-
-    // Load the Google Maps script
-    loadScript(`https://maps.googleapis.com/maps/api/js?key=AIzaSyCmg0PIbh58cGLp7hwMQoZt8FcxqZDbMgs&callback=initMap&libraries=places`);
-  }, []);
-
-  return <div id="map" ref={mapRef} style={{ height: '500px', width: '100%' }}></div>;
-};
-
 
 const Page = () => {
   const [listings, setlistings] = useState<Array<any>>();
@@ -78,55 +18,43 @@ const Page = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [showAdvanceSearch, setShowAdvanceSearch] = useState(false);
+  const [searchItems, setSearchItems] = useState();
+  const [townsLocation, setTownsLocation] = useState(null);
   const [queryParams, setQueryParams] = useState({
-    town:'',
-    location:'',
-    bedroom:null,
-    bathrooms:null,
-    min_price:null,
-    max_price:null,
-    listing_type:''
-  })
+    town: "",
+    location: "",
+    bedroom: null,
+    bathrooms: null,
+    min_price: null,
+    max_price: null,
+    listing_type: "",
+  });
 
-   //get users location
-
-
-   useEffect(() =>{
-
-    getUserLocation()
-  },[])
- 
-  //console.log(listings);
   const fetchListings = async () => {
     try {
       const user = localStorage.getItem("user");
-      console.log(`i am testing the users\n\n`, user);
-      
-      if(user){
-        const { id, token, username, role } = JSON.parse(user as unknown as string);
-        console.log(id, token, username, role);
+
+      if (user) {
+        const { id, token, username, role } = JSON.parse(
+          user as unknown as string
+        );
         fetch(`http://127.0.0.1:8000/api/listings/content?user_id=${id}`, {
           method: "GET",
         })
           .then((response) => response.json())
           .then((result) => {
-            // console.log(result);
             setlistings(result);
-            console.log(result);
           });
-      }else{
-          fetch(`http://127.0.0.1:8000/api/listings/list/?page=${currentPage}`,{
-             method: "GET",
-           }).then((response ) => response.json()
-           .then((result) =>
-             {
-               setlistings(result.results);
-               console.log(result.results);
-               console.log(result.length);
-               
-               setTotalPages(Math.ceil(result.count / result.results.length));
-             }
-           ))
+      } else {
+        fetch(`http://127.0.0.1:8000/api/listings/list/?page=${currentPage}`, {
+          method: "GET",
+        }).then((response) =>
+          response.json().then((result) => {
+            setlistings(result.results);
+
+            setTotalPages(Math.ceil(result.count / result.results.length));
+          })
+        );
       }
     } catch (error) {
       console.error("Error fetching listings:", error);
@@ -136,6 +64,38 @@ const Page = () => {
     fetchListings();
   }, [currentPage]);
 
+  useEffect(() => {
+    try {
+      fetch(`http://127.0.0.1:8000/api/listings/distinct-values/`, {
+        method: "GET",
+      }).then((response) =>
+        response.json().then((result) => {
+          setSearchItems(result);
+
+          setTotalPages(Math.ceil(result.count / result.results.length));
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const handleTownChange = () => {
+    try {
+      fetch(
+        `http://127.0.0.1:8000/api/listings/locations?town=${queryParams.town}`,
+        {
+          method: "GET",
+        }
+      ).then((response) =>
+        response.json().then((result) => {
+          setTownsLocation(result.locations);
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     // Restore state from local storage on component mount
     const storedCurrentPage = localStorage.getItem("currentPage");
@@ -166,24 +126,39 @@ const Page = () => {
       `http://127.0.0.1:8000/api/listings/listing_document/suggest/?town_suggest__completion=${query}`
     );
     const data = await response.json();
-    console.log(data.town_suggest__completion[0].options);
 
     setSuggestions(data);
   };
 
-  const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     const query = e.target.value;
     setQuery(e.target.value);
     fetchSuggestions(query);
   };
-  const handleSelectChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
-    const query = e.target.value;
-    setQueryParams((prev) =>({...prev,[e.target.name]:e.target.value}))
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const query_name = e.target.name;
+    setQueryParams((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    if(query_name=='town'){
+      try {
+        fetch(
+          `http://127.0.0.1:8000/api/listings/locations?town=${e.target.value}`,
+          {
+            method: "GET",
+          }
+        ).then((response) =>
+          response.json().then((result) => {
+            setTownsLocation(result.locations);
+          })
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   // text input search by entring a users search query
-  
+
   const handleListingsSearch = () => {
     localStorage.setItem("query", query);
     fetch(`http://127.0.0.1:8000/api/listings/search?query=${query}`, {
@@ -191,28 +166,37 @@ const Page = () => {
     })
       .then((response) => response.json())
       .then((result) => {
-        // console.log(result);
         setlistings(result.Listings);
         setSearch(true);
         setScores(result.Scores);
-        console.log(result.Listing);
       });
   };
 
   //drop down search functionlity of the application
 
   const handleFullSearch = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     localStorage.setItem("query", JSON.stringify(queryParams));
-    console.log("\n\n",JSON.stringify(queryParams))
+    let base_url = "http://127.0.0.1:8000/api/listings/listing_search?query="
+    if(queryParams.town) base_url +=`${queryParams.town}`
+    if(queryParams.location) base_url +=`&location=${queryParams.location}`
+    if(queryParams.listing_type) base_url +=`&listing_type${queryParams.listing_type}`
+    if(queryParams.bedroom) base_url +=`&bedroom=${queryParams.bedroom}`
+    if(queryParams.bathrooms) base_url +=`&bathrooms=${queryParams.bathrooms}`
+    if(queryParams.min_price) base_url +=`&min_price=${queryParams.min_price}`
+    if(queryParams.max_price) base_url +=`&max_price=${queryParams.max_price}`
+
+    console.log("\n\n na me this so di log\n\n",base_url);
     
-    fetch(`http://127.0.0.1:8000/api/listings/listing_search?query=${queryParams.town}&bedroom=${queryParams.bedroom}&bathrooms=${queryParams.bathrooms}&min_price=${queryParams.min_price}&max_price=${queryParams.max_price}&listing_type=${queryParams.listing_type}`, {
-      method: "GET",
-    })
+    fetch(
+      base_url,
+      {
+        method: "GET",
+      }
+    )
       .then((response) => response.json())
       .then((result) => {
         setlistings(result);
-        console.log(result);
       });
   };
 
@@ -226,7 +210,7 @@ const Page = () => {
         <div className="bg-[url(/banner.jpg)] w-full h-[50vh] lg:h-[40vh] bg-cover bg-no-repeat py-10 flex flex-col justify-center items-center mb-8">
           <div className="w-full lg:w-[80%] mx-auto flex gap-2 px-2 md:gap-5 justify-center items-start  md:m-5 ">
             <form
-            onSubmit={handleFullSearch}
+              onSubmit={handleFullSearch}
               id="search form"
               className="w-[70%] flex flex-col justify-center items-center gap-2"
             >
@@ -268,35 +252,53 @@ const Page = () => {
                   value={queryParams.town}
                   onChange={(e) => handleSelectChange(e)}
                 >
-                  <option className="bg-white" value="buea">
-                    Buea
-                  </option>
-                  <option className="bg-white" value="limbe">
-                    Limbe
-                  </option>
-                  <option className="bg-white" value="mutegene">
-                    Limbe
-                  </option>
+                  {searchItems?.towns.map((town: string, index: number) => (
+                      <option
+                      key={index} 
+                        className="bg-white"
+                        value={`${town.toLocaleLowerCase()}`}
+                      >
+                    <button onClick={() => handleTownChange()}>
+                        {town}
+                    </button>
+                      </option>
+                  ))}
                 </select>
-                <select
-                  className="h-8 text-sm md:text-md focus:outline-none px-2 border-white border-b-2 bg-gray-950 bg-opacity-0 text-white "
-                  name="location"
-                  value={queryParams.location}
-                  id=""
-                >
-                  <option value="Bonduma">Bonduma</option>
-                  <option value="LongStreet">LongStreet</option>
-                  <option value="molyko">Molyko</option>
-                </select>
+                {queryParams.town && (
+                  <select
+                    className="h-8 text-sm  md:text-md focus:outline-none px-2 border-white border-b-2 bg-gray-950 bg-opacity-0 text-white "
+                    name="location"
+                    value={queryParams.location}
+                    id=""
+                  >
+                    {townsLocation?.map((location: string, index: number) => (
+                      <option
+                        key={index}
+                        className="bg-white"
+                        value={`${location.toLocaleLowerCase()}`}
+                      >
+                        {location}
+                      </option>
+                    ))}
+                  </select>
+                )}
                 <select
                   className="h-8 text-sm md:text-md focus:outline-none px-2 border-white border-b-2 bg-gray-950 bg-opacity-0 text-white "
                   name="listing_type"
                   value={queryParams.listing_type}
                   id=""
                 >
-                  <option value="studio">Studio</option>
-                  <option value="apartment">apartment</option>
-                  <option value="single rooms">Single Rooms</option>
+                  {searchItems?.listing_types.map(
+                    (type: string, index: number) => (
+                      <option
+                        key={index}
+                        className="bg-white"
+                        value={`${type.toLocaleLowerCase()}`}
+                      >
+                        {type}
+                      </option>
+                    )
+                  )}
                 </select>
                 <select
                   className="h-8 text-sm md:text-md focus:outline-none px-2 border-white border-b-2 bg-gray-950 bg-opacity-0 text-white "
@@ -305,29 +307,39 @@ const Page = () => {
                   value={queryParams.bedroom}
                   typeof="number"
                   onChange={(e) => handleSelectChange(e)}
-
                 >
                   <option value="">Bedrooms</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
+                  {searchItems?.bedrooms.map(
+                    (bedroom: string, index: number) => (
+                      <option
+                        key={index}
+                        className="bg-white"
+                        value={`${bedroom}`}
+                      >
+                        {bedroom}
+                      </option>
+                    )
+                  )}
                 </select>
                 <select
                   className="h-8 text-sm md:text-md focus:outline-none px-2 border-white border-b-2 bg-gray-950 bg-opacity-0 text-white "
                   name="bathrooms"
                   typeof="number"
-                  value={queryParams.bathrooms}
+                  value={queryParams?.bathrooms}
                   onChange={(e) => handleSelectChange(e)}
-
-                  >
-                    <option value="">Bathrooms</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
+                >
+                  <option value="">Bathrooms</option>
+                  {searchItems?.bathrooms
+                    .slice(0, 5)
+                    .map((bathroom: string, index: number) => (
+                      <option
+                        key={index}
+                        className="bg-white"
+                        value={`${bathroom}`}
+                      >
+                        {bathroom}
+                      </option>
+                    ))}
                 </select>
                 <select
                   className="h-8 text-sm md:text-md focus:outline-none px-2 border-white border-b-2 bg-gray-950 bg-opacity-0 text-white "
@@ -336,14 +348,14 @@ const Page = () => {
                   typeof="number"
                   value={queryParams.min_price}
                   onChange={(e) => handleSelectChange(e)}
-
-                  >
-                    <option value="">Price</option>
-                    <option value="10000">10000</option>
-                    <option value="20000">200000</option>
-                    <option value="300000">30000</option>
-                    <option value="400000">40000</option>
-                    <option value="500000">50000</option>
+                >
+                  <option value="">Min Price</option>
+                  <option value="10000">10000</option>
+                  <option value="20000">20000</option>
+                  <option value="40000">40000</option>
+                  <option value="60000">60000</option>
+                  <option value="80000">80000</option>
+                  <option value="100000">100000</option>
                 </select>
                 <select
                   className="h-8 text-sm md:text-md focus:outline-none px-2 border-white border-b-2 bg-gray-950 bg-opacity-0 text-white "
@@ -352,19 +364,20 @@ const Page = () => {
                   typeof="number"
                   value={queryParams.max_price}
                   onChange={(e) => handleSelectChange(e)}
-
-                  >
-                    <option value="">Price</option>
-                    <option value="10000">10000</option>
-                    <option value="20000">200000</option>
-                    <option value="300000">30000</option>
-                    <option value="400000">40000</option>
-                    <option value="500000">50000</option>
+                >
+                  <option value="">Max Price</option>
+                  <option value="10000">10000</option>
+                  <option value="20000">20000</option>
+                  <option value="40000">40000</option>
+                  <option value="60000">60000</option>
+                  <option value="80000">80000</option>
+                  <option value="100000">100000</option>
                 </select>
                 <div className="cols-span-2 py-4 md:col-span-3 flex justify-between items-center w-full">
                   <span className="text-sm text-orange-500 font-medium">
                     {" "}
-                    108 <span className="text-white ">results</span>
+                    {listings && listings.length}{" "}
+                    <span className="text-white ">results</span>
                   </span>
                   <div className="flex gap-2 justify-end items-center">
                     <span className="text-sm md:text-md text-white font-medium">
@@ -372,24 +385,26 @@ const Page = () => {
                       Reset
                     </span>
                     <button
-                    type="submit"
+                      type="submit"
                       className=" px-8 py-2 border-gray-100 bg-orange-500 font-bold text-white  shadow-2xl rounded-lg text-xs flex w-[40%] justify-center items-center "
                     >
-                      Search
+                      Searcher
                     </button>
                   </div>
                 </div>
               </div>
             </form>
-            <button
-              onClick={handleListingsSearch}
-              className={cn(
-                "text-white bg-[#27262c] hidden md:block w-[20%] h-10 md:h-12 md:w-auto text-xs px-2 md:px-8 md:py-2 text-md rounded-2xl font-bold",
-                showAdvanceSearch && "hidden"
-              )}
-            >
-              Search
-            </button>
+            {!showAdvanceSearch && (
+              <button
+                onClick={handleListingsSearch}
+                className={cn(
+                  "text-white bg-[#27262c] hidden md:block w-[20%] h-10 md:h-12 md:w-auto text-xs px-2 md:px-8 md:py-2 text-md rounded-2xl font-bold",
+                  showAdvanceSearch && "hidden"
+                )}
+              >
+                Searchss
+              </button>
+            )}
             {suggestions?.town_suggest__completion[0].options.length > 0 && (
               <ul className="absolute z-50 top-1/4">
                 {suggestions?.town_suggest__completion[0].options.map(

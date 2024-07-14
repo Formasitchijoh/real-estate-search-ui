@@ -15,42 +15,36 @@ const Properties = () => {
 
 
     //get users recommendation as per this property
-  //console.log(listings);
+;
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    console.log(`i am testing the users\n\n`, user);
-    
-    if(user){
-      const { id, token, username, role } = JSON.parse(user as unknown as string);
-      console.log(id, token, username, role);
-      fetch(`http://127.0.0.1:8000/api/listings/content?user_id=${id}`, {
-        method: "GET",
-      })
-        .then((response) => response.json())
-        .then((result) => {
-          // console.log(result);
-          setlistings(result);
-          console.log(result);
-        });
-    }else{
-      try {
-        fetch(`http://127.0.0.1:8000/api/listings/list/?page=${currentPage}`,{
-           method: "GET",
-         }).then((response ) => response.json()
-         .then((result) =>
-           {
-             setlistings(result.results);
-             console.log(result.results);
-             console.log(result.length);
-             
-             setTotalPages(Math.ceil(result.count / result.results.length));
-           }
-         ))
-        
-       } catch (error) {
-         console.error('Error fetching listings:', error);
-       }
+    try {
+      const user = localStorage.getItem("user");
+      
+      if(user){
+        const { id, token, username, role, recommendation } = JSON.parse(user as unknown as string);
+        fetch(`http://127.0.0.1:8000/api/listings/content?user_id=${id}`, {
+          method: "GET",
+        })
+          .then((response) => response.json())
+          .then((result) => {
+            setlistings(result);
+          });
+      }else{
+          fetch(`http://127.0.0.1:8000/api/listings/list/?page=${currentPage}`,{
+             method: "GET",
+           }).then((response ) => response.json()
+           .then((result) =>
+             {
+               setlistings(result.results);
+               
+               setTotalPages(Math.ceil(result.count / result.results.length));
+             }
+           ))
+      }
+    } catch (error) {
+      console.error("Error fetching listings:", error);
     }
+    
   }, [currentPage,newRecommendation]);
 
   return (

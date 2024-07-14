@@ -35,7 +35,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  console.log("value of the initial state", initialStates);
 
   return (
     <html lang="en">

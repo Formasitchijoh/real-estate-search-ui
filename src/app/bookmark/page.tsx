@@ -13,9 +13,7 @@ const Page = () => {
   useEffect(() => {
     const user = localStorage.getItem('user')
     if(user){
-    //console.log(JSON.parse(user as unknown as string));
     const { id, token,username, role} = JSON.parse(user as unknown as string)
-    console.log(id, token, username, role);
 
     fetch(`http://127.0.0.1:8000/api/bookmarks?user_id=${id}`, {
       method: "GET",
@@ -23,12 +21,10 @@ const Page = () => {
       .then((response) => response.json())
       .then((result) => {
         setlistings(result);
-        console.log(result);
       });
     }
   }, []);
 
-  console.log(listings);
   return (
     <div>
       <div className="grid w-[100%] sm:w-[90%] lg:w-[80%] mx-auto md:grid-cols-2 px-4 md:px-0 lg:grid-cols-3 pb-16 gap-6">

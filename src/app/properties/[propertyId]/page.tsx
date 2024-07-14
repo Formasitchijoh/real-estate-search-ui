@@ -37,8 +37,7 @@ const Property = () => {
   const [newRecommendation, setNewRecommendation] = useState(false)
   const pathname = usePathname();
   const propertyId = pathname.split("/").pop();
-  console.log(propertyId);
-  console.log(pathname);
+
 
 
  
@@ -55,7 +54,6 @@ const Property = () => {
   }, []);
 
   //get users recommendation as per this property
-  //console.log(listings);
   const fetchListings = async () => {
     try {
       const user = localStorage.getItem("user");
@@ -63,15 +61,12 @@ const Property = () => {
         const { id, token, username, role } = JSON.parse(
           user as unknown as string
         );
-        console.log(id, token, username, role);
         fetch(`http://127.0.0.1:8000/api/recommendations/user/?user_id=${id}`, {
           method: "GET",
         })
           .then((response) => response.json())
           .then((result) => {
-            // console.log(result);
             setlistings(result.Listings);
-            console.log(result.Listing);
           });
       }
     } catch (error) {
@@ -83,15 +78,12 @@ const Property = () => {
     const user = localStorage.getItem("user");
    if(user){
     const { id, token, username, role } = JSON.parse(user as unknown as string);
-    console.log(id, token, username, role);
     fetch(`http://127.0.0.1:8000/api/recommendations/user/?user_id=${id}`, {
       method: "GET",
     })
       .then((response) => response.json())
       .then((result) => {
-        // console.log(result);
         setlistings(result.Listings);
-        console.log(result.Listing);
       });
    }else{
     try {
@@ -101,8 +93,6 @@ const Property = () => {
        .then((result) =>
          {
            setlistings(result.results);
-           console.log(result.results);
-           console.log(result.length);
            
            setTotalPages(Math.ceil(result.count / result.results.length));
          }
@@ -122,11 +112,9 @@ const Property = () => {
       const query = localStorage.getItem("query");
       
       if(user || query){
-          //console.log(JSON.parse(user as unknown as string));
       const { id, token, username, role } = JSON.parse(
         user as unknown as string
       );
-      console.log(id, token, username, role,query);
       
       listing &&
         fetch("http://127.0.0.1:8000/api/recommendations/list/", {
@@ -146,20 +134,15 @@ const Property = () => {
             if(result){
               setNewRecommendation(true)
             }
-            console.log("\n\nresult\n\n", result);
-            console.log("out");
           });
       }
-    }, 10000);
+    }, 1000);
   }, [listing, propertyId]);
   //create a bookmark
   const handleCreateBookMark = () => {
     const user = localStorage.getItem("user");
     if(user){
-          //console.log(JSON.parse(user as unknown as string));
     const { id, token, username, role } = JSON.parse(user as unknown as string);
-    console.log(id, token, username, role);
-    console.log("bookmark details", id, listing, propertyId);
 
     fetch("http://127.0.0.1:8000/api/bookmarks/", {
       method: "POST",
@@ -174,8 +157,6 @@ const Property = () => {
       const response = await result.json();
       if (result.status) {
         successnotify();
-        console.log(result.status);
-        console.log(response);
       }
     });
     }else{
@@ -204,7 +185,6 @@ const Property = () => {
     setCurrentPage(pageNumber);
     fetchListings();
   };
-  // console.log('image\n', listing?.listing_image[0].image);
 
   return (
     <>

@@ -36,6 +36,7 @@ const SignUp = () => {
     }).then(async (response) => {
       const result = await response.json();
       if (response.status == 200) {
+        localStorage.clear()
         localStorage.setItem("token", result.token);
         localStorage.setItem('user', JSON.stringify(result))
         router.push("/home");
@@ -45,9 +46,7 @@ const SignUp = () => {
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();    
-    console.log('\n\nuser\n\nuser', user);
-    
+    e.preventDefault();        
     fetch("http://127.0.0.1:8000/api/accounts/auth/register/", {
       method: "POST",
       headers: {
