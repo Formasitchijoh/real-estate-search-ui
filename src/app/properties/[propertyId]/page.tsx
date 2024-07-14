@@ -20,6 +20,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { successnotify, errornotify } from "./helper";
+import { getUserLocation } from "../helper";
 
 const Property = () => {
   const [open, setOpen] = React.useState(false);
@@ -40,6 +41,7 @@ const Property = () => {
   console.log(pathname);
 
 
+ 
 
   //get listing and the corresponding images
   useEffect(() => {
@@ -115,7 +117,7 @@ const Property = () => {
   //creating a recommendation for the given user
   useEffect(() => {
     setTimeout(() => {
-      listing?.town && alert("in");
+      listing?.town && console.log("in");
       const user = localStorage.getItem("user");
       const query = localStorage.getItem("query");
       
@@ -124,7 +126,7 @@ const Property = () => {
       const { id, token, username, role } = JSON.parse(
         user as unknown as string
       );
-      console.log(id, token, username, role);
+      console.log(id, token, username, role,query);
       
       listing &&
         fetch("http://127.0.0.1:8000/api/recommendations/list/", {
@@ -135,7 +137,7 @@ const Property = () => {
           body: JSON.stringify({
             user: id,
             last_search: query,
-            location: `${listing?.town}, ${listing?.location} `,
+            location: `${listing?.town}`,
             interest: propertyId,
           }),
         })
@@ -145,10 +147,10 @@ const Property = () => {
               setNewRecommendation(true)
             }
             console.log("\n\nresult\n\n", result);
-            alert("out");
+            console.log("out");
           });
       }
-    }, 100000000);
+    }, 10000);
   }, [listing, propertyId]);
   //create a bookmark
   const handleCreateBookMark = () => {

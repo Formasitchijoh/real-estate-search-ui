@@ -37,6 +37,7 @@ const SignUp = () => {
       const result = await response.json();
       if (response.status == 200) {
         localStorage.setItem("token", result.token);
+        localStorage.setItem('user', JSON.stringify(result))
         router.push("/home");
         return response.status;
       }

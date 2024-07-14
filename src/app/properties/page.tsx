@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import Properties from "../components/propertiesSection";
 import PropertyCard from "../components/propertyCard";
 import Lightbox from "yet-another-react-lightbox";
@@ -9,6 +9,67 @@ import axios from "axios";
 import SearchIcon from "../icons/SearchIcon";
 import AdjustMentsIcon from "../icons/AdjustMentsIcon";
 import { cn } from "../lib/utils";
+import { getUserLocation } from "./helper";
+
+
+// Extend the Window interface to include the initMap function
+declare global {
+  interface Window {
+    initMap: () => void;
+  }
+}
+
+const loadScript = (url: string) => {
+  const script = document.createElement('script');
+  script.src = url;
+  script.async = true;
+  script.defer = true;
+  document.body.appendChild(script);
+};
+
+export const MapComponent: React.FC = () => {
+  const mapRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    // Define the initMap function on the window object
+    window.initMap = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+
+          if (mapRef.current) {
+            const map = new google.maps.Map(mapRef.current, {
+              center: userLocation,
+              zoom: 15,
+            });
+
+            new google.maps.Marker({
+              position: userLocation,
+              map: map,
+            });
+
+            // Print the user's location
+            console.log(`User's Location: Latitude: ${userLocation.lat}, Longitude: ${userLocation.lng}`);
+          }
+        }, (error) => {
+          console.error('Error getting the location', error);
+        });
+      } else {
+        alert('Geolocation is not supported by this browser.');
+      }
+    };
+
+    // Load the Google Maps script
+    loadScript(`https://maps.googleapis.com/maps/api/js?key=AIzaSyCmg0PIbh58cGLp7hwMQoZt8FcxqZDbMgs&callback=initMap&libraries=places`);
+  }, []);
+
+  return <div id="map" ref={mapRef} style={{ height: '500px', width: '100%' }}></div>;
+};
+
+
 const Page = () => {
   const [listings, setlistings] = useState<Array<any>>();
   const [scores, setScores] = useState<Array<any>>();
@@ -27,21 +88,46 @@ const Page = () => {
     listing_type:''
   })
 
+   //get users location
+
+
+   useEffect(() =>{
+
+    getUserLocation()
+  },[])
  
   //console.log(listings);
   const fetchListings = async () => {
     try {
-      fetch(`http://127.0.0.1:8000/api/listings/list/?page=${currentPage}`, {
-        method: "GET",
-      }).then((response) =>
-        response.json().then((result) => {
-          setlistings(result.results);
-          console.log(result.results);
-          console.log(result.length);
-
-          setTotalPages(Math.ceil(result.count / result.results.length));
+      const user = localStorage.getItem("user");
+      console.log(`i am testing the users\n\n`, user);
+      
+      if(user){
+        const { id, token, username, role } = JSON.parse(user as unknown as string);
+        console.log(id, token, username, role);
+        fetch(`http://127.0.0.1:8000/api/listings/content?user_id=${id}`, {
+          method: "GET",
         })
-      );
+          .then((response) => response.json())
+          .then((result) => {
+            // console.log(result);
+            setlistings(result);
+            console.log(result);
+          });
+      }else{
+          fetch(`http://127.0.0.1:8000/api/listings/list/?page=${currentPage}`,{
+             method: "GET",
+           }).then((response ) => response.json()
+           .then((result) =>
+             {
+               setlistings(result.results);
+               console.log(result.results);
+               console.log(result.length);
+               
+               setTotalPages(Math.ceil(result.count / result.results.length));
+             }
+           ))
+      }
     } catch (error) {
       console.error("Error fetching listings:", error);
     }
@@ -74,6 +160,7 @@ const Page = () => {
   const [suggestions, setSuggestions] = useState();
   const [searchQuery, setSearchQuery] = useState<any>();
 
+  //Auto complete or suggestions
   const fetchSuggestions = async (query: string) => {
     const response = await fetch(
       `http://127.0.0.1:8000/api/listings/listing_document/suggest/?town_suggest__completion=${query}`
@@ -94,6 +181,9 @@ const Page = () => {
     const query = e.target.value;
     setQueryParams((prev) =>({...prev,[e.target.name]:e.target.value}))
   };
+
+  // text input search by entring a users search query
+  
   const handleListingsSearch = () => {
     localStorage.setItem("query", query);
     fetch(`http://127.0.0.1:8000/api/listings/search?query=${query}`, {
@@ -108,6 +198,9 @@ const Page = () => {
         console.log(result.Listing);
       });
   };
+
+  //drop down search functionlity of the application
+
   const handleFullSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     localStorage.setItem("query", JSON.stringify(queryParams));

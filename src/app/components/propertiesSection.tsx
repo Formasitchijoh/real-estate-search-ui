@@ -23,14 +23,14 @@ const Properties = () => {
     if(user){
       const { id, token, username, role } = JSON.parse(user as unknown as string);
       console.log(id, token, username, role);
-      fetch(`http://127.0.0.1:8000/api/recommendations/user/?user_id=${id}`, {
+      fetch(`http://127.0.0.1:8000/api/listings/content?user_id=${id}`, {
         method: "GET",
       })
         .then((response) => response.json())
         .then((result) => {
           // console.log(result);
-          setlistings(result.Listings);
-          console.log(result.Listing);
+          setlistings(result);
+          console.log(result);
         });
     }else{
       try {
