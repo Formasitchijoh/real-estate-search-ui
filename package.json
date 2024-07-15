@@ -27,6 +27,7 @@
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
     "react-leaflet": "^4.2.1",
+    "styled-components": "^6.1.11",
     "tailwind-merge": "^2.3.0",
     "three": "^0.166.1",
     "yet-another-react-lightbox": "^3.20.1",

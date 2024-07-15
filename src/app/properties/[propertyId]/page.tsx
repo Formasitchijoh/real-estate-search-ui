@@ -21,6 +21,8 @@ import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { successnotify, errornotify } from "./helper";
 import VirtualTour from "./helper";
+import { Panorama } from "@/app/panolens";
+import style from '../../panolens/style.css'
 const Property = () => {
   const [open, setOpen] = React.useState(false);
   const captionsRef = React.useRef(null);
@@ -283,7 +285,10 @@ const Property = () => {
         <h1>Property Virtual Tour</h1>
         {
           listing?.listing_image &&
-        <VirtualTour imageUrls={listing?.listing_image} />
+        //<VirtualTour imageUrls={listing?.listing_image} />
+        <div className="App">
+      <Panorama />
+    </div>
         }
         </h2>
       </div>
