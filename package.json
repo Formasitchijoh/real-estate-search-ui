@@ -21,6 +21,7 @@
     "formik": "^2.4.6",
     "leaflet": "^1.9.4",
     "next": "14.2.4",
+    "pannellum": "^2.5.6",
     "panolens": "^0.12.1",
     "react": "^18",
     "react-dom": "^18",
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/pannellum": "^2.5.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",

@@ -20,8 +20,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { successnotify, errornotify } from "./helper";
-import { getUserLocation } from "../helper";
-
+import VirtualTour from "./helper";
 const Property = () => {
   const [open, setOpen] = React.useState(false);
   const captionsRef = React.useRef(null);
@@ -277,6 +276,16 @@ const Property = () => {
             />
           </div>
         </div>
+      </div>
+
+      <div className="md:py-10 w-[100%] sm:w-[90%] px-4 lg:px-0 lg:w-[80%] mx-auto ">
+        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-3xl text-black font-medium tracking-tight leading-snug">
+        <h1>Property Virtual Tour</h1>
+        {
+          listing?.listing_image &&
+        <VirtualTour imageUrls={listing?.listing_image} />
+        }
+        </h2>
       </div>
 
       <div className="md:py-10 w-[100%] sm:w-[90%] px-4 lg:px-0 lg:w-[80%] mx-auto ">
