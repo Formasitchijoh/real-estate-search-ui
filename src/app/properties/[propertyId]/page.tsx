@@ -19,10 +19,9 @@ import PropertyCard from "@/app/components/propertyCard";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
-import { successnotify, errornotify, VirtualViewer } from "./helper";
+import { successnotify, errornotify} from "./helper";
 import VirtualTour from "./helper";
 import { Panorama } from "@/app/panolens";
-import style from '../../panolens/style.css'
 const Property = () => {
   const [open, setOpen] = React.useState(false);
   const captionsRef = React.useRef(null);
@@ -43,7 +42,7 @@ const Property = () => {
 
  
 
-  //get listing and the corresponding images
+ // get listing and the corresponding images
   useEffect(() => {
     fetch(`http://127.0.0.1:8000/api/listings/list/${propertyId}`, {
       method: "GET",
@@ -59,15 +58,18 @@ const Property = () => {
     try {
       const user = localStorage.getItem("user");
       if(user){
-        const { id, token, username, role } = JSON.parse(
+        const { id, token, username, role, recommendation } = JSON.parse(
           user as unknown as string
         );
+        console.log('\n\n\n\\yyyyyyyyyyyyyyyyyyyyyyyyy\n', recommendation);
         fetch(`http://127.0.0.1:8000/api/recommendations/user/?user_id=${id}`, {
           method: "GET",
         })
           .then((response) => response.json())
           .then((result) => {
             setlistings(result.Listings);
+            console.log('\n\n\n\\hhhhhhhhhhhhhhhh\n', result.Listings);
+            
           });
       }
     } catch (error) {
@@ -94,7 +96,8 @@ const Property = () => {
        .then((result) =>
          {
            setlistings(result.results);
-           
+           console.log('\n\n\n\\hhhhhhhhhhhhhhhh ooooooo\n', result.results);
+
            setTotalPages(Math.ceil(result.count / result.results.length));
          }
        ))
@@ -116,7 +119,7 @@ const Property = () => {
       const { id, token, username, role } = JSON.parse(
         user as unknown as string
       );
-      console.log(id, '\n', query, '\n', listing?.town, '\n', propertyId)
+      console.log('hbfbnfgnhhhhhhhhhh', id, '\n', query, '\n', listing?.town, '\n', propertyId)
       listing &&
         fetch("http://127.0.0.1:8000/api/recommendations/list/", {
           method: "POST",
@@ -133,6 +136,7 @@ const Property = () => {
           .then((response) => response.json())
           .then((result) => { 
             if(result){
+              console.log('\n\nrrrrrrrrrr', result);
               console.log(JSON.stringify(result))
               successnotify("Your Preference has been updated.");
               setNewRecommendation(true)

@@ -14,6 +14,7 @@ import Footer from "../components/footer";
 import Link from "next/link";
 import PropertyCard from "../components/propertyCard";
 import Button from "../components/button";
+import { useRouter } from "next/navigation";
 const Home = () => { 
   const [listings, setlistings] = useState<Array<any>>();
   const [scores, setScores] = useState<Array<any>>();
@@ -22,61 +23,53 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [newRecommendation, setNewRecommendation] = useState(false)
-  
+  const [recommendations, setRecommendations] = useState<Array<any>>();
+
+  const router = useRouter();
+
+  const user = localStorage.getItem("user");
+  const { id, token, username, role } = user
+    ? JSON.parse(user as unknown as string)
+    : " ";
+  useEffect(() => {
+    router.refresh();
+  }, [user]);
+
   useEffect(() => {
     try {
+      fetch(`http://127.0.0.1:8000/api/listings/list/?page=${currentPage}`, {
+        method: "GET",
+      }).then((response) =>
+        response.json().then((result) => {
+          setlistings(result.results);
+          // alert('in')
+          console.log("\n\nresult hdhfhsfjsjfnsjfg\n\n", result.results);
+          setTotalPages(Math.ceil(result.count / result.results.length));
+        })
+      );
       const user = localStorage.getItem("user");
-      const { id, token, username, role, recommendation } = JSON.parse(user as unknown as string);
-          fetch(`http://127.0.0.1:8000/api/listings/list/?page=${currentPage}`,{
-             method: "GET",
-           }).then((response ) => response.json()
-           .then((result) =>
-             {
-               setlistings(result?.results);
-               console.log('\n\n result of listing', result?.result);
-               
-               setTotalPages(Math.ceil(result.count / result.results.length));
-             }
-           ))
+
+      const { id, token, username, role, recommendation } = JSON.parse(
+        user as unknown as string
+      );
+      console.log("\n\n user user", user);
+
+      if (user && recommendation) {
+        console.log("\n\n user i recommendation\n\n", user);
+
+        fetch(`http://127.0.0.1:8000/api/listings/content?user_id=${id}`, {
+          method: "GET",
+        })
+          .then((response) => response.json())
+          .then((result) => {
+            setRecommendations(result);
+            console.log("\n\nresult\n\n", result);
+          });
+      }
     } catch (error) {
-      console.error("Error fetching listings:", error);
+      console.log(error);
     }
-    
-  }, [currentPage,newRecommendation]);
-
-  // useEffect(() => {
-  //   try {
-  //     const user = localStorage.getItem("user");
-      
-  //     const { id, token, username, role, recommendation } = JSON.parse(user as unknown as string);
-
-  //     if(user && recommendation){
-  //       alert(user)
-  //       fetch(`http://127.0.0.1:8000/api/listings/content?user_id=${id}`, {
-  //         method: "GET",
-  //       })
-  //         .then((response) => response.json())
-  //         .then((result) => {
-  //           setlistings(result);
-  //         });
-  //     }else{
-  //       alert('in')
-  //         fetch(`http://127.0.0.1:8000/api/listings/list/?page=${currentPage}`,{
-  //            method: "GET",
-  //          }).then((response ) => response.json()
-  //          .then((result) =>
-  //            {
-  //              setlistings(result.results);
-               
-  //              setTotalPages(Math.ceil(result.count / result.results.length));
-  //            }
-  //          ))
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching listings:", error);
-  //   }
-    
-  // }, [currentPage,newRecommendation]);
+  }, [currentPage]);
   return (
     <div className="">
       <HeroSection/>

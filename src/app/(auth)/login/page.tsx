@@ -67,6 +67,8 @@ const SignIn = () => {
               if(response.status == 200){
                 setLoading(false)
                 localStorage.setItem('user', JSON.stringify(result))
+                console.log("\n\n\n lllllllllllll",result);
+                
                 router.push("/home");
                 successnotify("Login successfull.");
 
