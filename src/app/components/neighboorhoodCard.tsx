@@ -1,9 +1,12 @@
 import image from "next/image";
 import React from "react";
 import Button from "./button";
+import { useRouter } from "next/navigation";
 const NeighboorhoodCard = ({ text }: { text: string }) => {
+
+  const router = useRouter()
   return (
-    <div className="flex flex-col w-[18rem] lg:w-[23rem] mx-auto justify-start items-start py-8 pl-8 rounded-2xl shadow-lg border-[0.1px] border-[#a4a8ae]">
+    <div onClick={() =>  router.push('/properties')} className="flex flex-col w-[18rem] lg:w-[23rem] mx-auto justify-start items-start py-8 pl-8 rounded-2xl shadow-lg border-[0.1px] border-[#a4a8ae]">
       <h4 className=" ml-5 text-sm lg:text-xl font-bold inline-block">{text}</h4>
       <span>
         {" "}

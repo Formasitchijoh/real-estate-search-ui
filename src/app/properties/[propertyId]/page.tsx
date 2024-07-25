@@ -19,7 +19,7 @@ import PropertyCard from "@/app/components/propertyCard";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
-import { successnotify, errornotify } from "./helper";
+import { successnotify, errornotify, VirtualViewer } from "./helper";
 import VirtualTour from "./helper";
 import { Panorama } from "@/app/panolens";
 import style from '../../panolens/style.css'
@@ -77,8 +77,8 @@ const Property = () => {
 
   useEffect(() => {
     const user = localStorage.getItem("user");
-   if(user){
-    const { id, token, username, role } = JSON.parse(user as unknown as string);
+    if(user){
+     const { id, token, username, role,recommendation } = JSON.parse(user as unknown as string);
     fetch(`http://127.0.0.1:8000/api/recommendations/user/?user_id=${id}`, {
       method: "GET",
     })
@@ -116,7 +116,7 @@ const Property = () => {
       const { id, token, username, role } = JSON.parse(
         user as unknown as string
       );
-      
+      //alert('user')
       listing &&
         fetch("http://127.0.0.1:8000/api/recommendations/list/", {
           method: "POST",
@@ -133,6 +133,7 @@ const Property = () => {
           .then((response) => response.json())
           .then((result) => { 
             if(result){
+              console.log(JSON.stringify(result))
               setNewRecommendation(true)
             }
           });
@@ -269,31 +270,35 @@ const Property = () => {
           </div>
 
           <div className="flex px-2 gap-4 w-full place-content-start py-8 mt-8 md:mt-6">
-            <Button text="Request Property" primary={true} />
+            <Button text="Request Property" onClick={() => router.push('/payment')} primary={true} />
             <Button
               onClick={handleCreateBookMark}
               className="text-black"
               text="BookMark property"
               tetiary={true}
             />
+                        <Button text="Virtual Tour" onClick={() => router.push('/payment')} quatenary />
+
           </div>
         </div>
       </div>
 
-      <div className="md:py-10 w-[100%] sm:w-[90%] px-4 lg:px-0 lg:w-[80%] mx-auto ">
-        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-3xl text-black font-medium tracking-tight leading-snug">
+     <div className="md:py-10 w-[100%] sm:w-[90%] px-4 lg:px-0 lg:w-[80%] mx-auto ">
         <h1>Property Virtual Tour</h1>
+        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-3xl text-black font-medium tracking-tight leading-snug">
+        </h2>
         {
           listing?.listing_image &&
-        //<VirtualTour imageUrls={listing?.listing_image} />
         <div className="App">
-      <Panorama />
+  
+
+      
     </div>
         }
-        </h2>
-      </div>
+      
+      </div> 
 
-      <div className="md:py-10 w-[100%] sm:w-[90%] px-4 lg:px-0 lg:w-[80%] mx-auto ">
+      <div className="md:py-10 w-[100%] sm:w-[90%] px-4 lg:px-0 lg:w-[90%] mx-auto ">
         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-3xl text-black font-medium tracking-tight leading-snug">
           Recommeded Properties{" "}
         </h2>

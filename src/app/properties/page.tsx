@@ -34,10 +34,10 @@ const Page = () => {
     try {
       const user = localStorage.getItem("user");
 
-      if (user) {
-        const { id, token, username, role } = JSON.parse(
-          user as unknown as string
-        );
+      const { id, token, username, role,recommendation } = JSON.parse(
+        user as unknown as string
+      );
+      if (user && recommendation) {
         console.log("\n\n user\n\n", user);
         
         fetch(`http://127.0.0.1:8000/api/listings/content?user_id=${id}`, {
@@ -73,8 +73,6 @@ const Page = () => {
       }).then((response) =>
         response.json().then((result) => {
           setSearchItems(result);
-
-          setTotalPages(Math.ceil(result.count / result.results.length));
         })
       );
     } catch (error) {
@@ -125,11 +123,13 @@ const Page = () => {
   //Auto complete or suggestions
   const fetchSuggestions = async (query: string) => {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/listings/listing_document/suggest/?town_suggest__completion=${query}`
+      `http://127.0.0.1:8000/api/listings/listing_document/suggest/?listing_type_suggest__completion=${query}&town_suggest__completion=${query}&title_suggest__completion=${query}&location_suggest__completion=${query}`
     );
     const data = await response.json();
 
     setSuggestions(data);
+    console.log("\n\n this is the result\n",data);
+
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -180,6 +180,7 @@ const Page = () => {
     e.preventDefault();
     localStorage.setItem("query", JSON.stringify(queryParams));
     let base_url = "http://127.0.0.1:8000/api/listings/listing_search?query="
+    if(searchQuery) base_url+=`${searchQuery}`
     if(queryParams.town) base_url +=`${queryParams.town}`
     if(queryParams.location) base_url +=`&location=${queryParams.location}`
     if(queryParams.listing_type) base_url +=`&listing_type${queryParams.listing_type}`
@@ -199,12 +200,29 @@ const Page = () => {
       .then((response) => response.json())
       .then((result) => {
         setlistings(result);
+      
+        
       });
   };
 
   const selectSuggestion = (suggestion: string) => {
     setSearchQuery(suggestion);
-    //fetchResults(suggestion);
+
+    alert(suggestion)
+    let base_url = `http://127.0.0.1:8000/api/listings/listing_search?query=${searchQuery}`
+    console.log("\n\n na me this so di log\n\n",base_url);
+    fetch(
+      base_url,
+      {
+        method: "GET",
+      }
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setlistings(result);
+      
+        
+      });
   };
   return (
     <div className="pb-16">
@@ -216,11 +234,11 @@ const Page = () => {
               id="search form"
               className="w-[70%] flex flex-col justify-center items-center gap-2"
             >
-              <div className="h-10 md:h-12  w-full flex-grow flex justify-center items-center rounded-2xl bg-[#eee] border-gray-800 border-[0.1px] px-2 md:px-0 md:pl-5 lg:pl-5">
+              <div className="h-10 md:h-12  relative  w-full flex-grow flex justify-center items-center rounded-2xl bg-[#eee] border-gray-800 border-[0.1px] px-2 md:px-0 md:pl-5 lg:pl-5">
                 <SearchIcon />
                 <input
                   type="search"
-                  value={query}
+                  value={ searchQuery? searchQuery: query}
                   onChange={(e) => handleInputChange(e)}
                   className="h-full w-full focus:outline-none px-2 bg-[#eee] "
                 />
@@ -239,6 +257,66 @@ const Page = () => {
                 >
                   Search
                 </button>
+              {suggestions?.listing_type_suggest__completion[0].options.length > 0 && (
+              <ul className="absolute z-50 top-[105%] w-[100%] mx-auto bg-[#eee] px-5 mr-5">
+                {suggestions?.listing_type_suggest__completion[0].options.map(
+                  (suggestion) => (
+                    <li
+                    className="cursor-pointer"
+                      key={suggestion?._id}
+                      onClick={() => selectSuggestion(suggestion._source.listing_type)}
+                    >
+                      {suggestion._source.listing_type}
+                    </li>
+                  )
+                )}
+              </ul>
+            )}
+              {suggestions?.title_suggest__completion[0].options.length > 0 && (
+              <ul className="absolute z-50 top-[105%] w-[100%] mx-auto px-5  bg-[#eee] mr-5">
+                {suggestions?.title_suggest__completion[0].options.map(
+                  (suggestion) => (
+                    <li
+                    className="cursor-pointer"
+                      key={suggestion?._id}
+                      onClick={() => selectSuggestion(suggestion._source.title)}
+                    >
+                      {suggestion._source.title}
+                    </li>
+                  )
+                )}
+              </ul>
+            )}
+              {suggestions?.town_suggest__completion[0].options.length > 0 && (
+              <ul className="absolute z-50 top-[105%] w-[100%] mx-auto px-5  bg-[#eee] mr-5">
+                {suggestions?.town_suggest__completion[0].options.map(
+                  (suggestion) => (
+                    <li
+                    className="cursor-pointer"
+                      key={suggestion?._id}
+                      onClick={() => selectSuggestion(suggestion._source.town)}
+                    >
+                      {suggestion._source.town}
+                    </li>
+                  )
+                )}
+              </ul>
+            )}
+              {suggestions?.location_suggest__completion[0].options.length > 0 && (
+              <ul className="absolute z-50 top-[105%] w-[100%] px-5  mx-auto bg-[#eee] mr-5">
+                {suggestions?.location_suggest__completion[0].options.map(
+                  (suggestion) => (
+                    <li
+                    className="cursor-pointer"
+                      key={suggestion?._id}
+                      onClick={() => selectSuggestion(suggestion._source.location)}
+                    >
+                      {suggestion._source.location}
+                    </li>
+                  )
+                )}
+              </ul>
+            )}
               </div>
               <div
                 className={cn(
@@ -390,7 +468,7 @@ const Page = () => {
                       type="submit"
                       className=" px-8 py-2 border-gray-100 bg-orange-500 font-bold text-white  shadow-2xl rounded-lg text-xs flex w-[40%] justify-center items-center "
                     >
-                      Searcher
+                      Search
                     </button>
                   </div>
                 </div>
@@ -404,23 +482,10 @@ const Page = () => {
                   showAdvanceSearch && "hidden"
                 )}
               >
-                Searchss
+                Search
               </button>
             )}
-            {suggestions?.town_suggest__completion[0].options.length > 0 && (
-              <ul className="absolute z-50 top-1/4">
-                {suggestions?.town_suggest__completion[0].options.map(
-                  (suggestion) => (
-                    <li
-                      key={suggestion?._id}
-                      onClick={() => selectSuggestion(suggestion._source.town)}
-                    >
-                      {suggestion._source.town}
-                    </li>
-                  )
-                )}
-              </ul>
-            )}
+
           </div>
         </div>
 
@@ -435,7 +500,7 @@ const Page = () => {
               >
                 <PropertyCard
                   image={
-                    search ? listing.images[0] : listing.listing_image[1]?.image
+                    search ? listing.images[0] : listing.listing_image[0]?.image
                   }
                   title={listing.title}
                   bedrooms={listing.bedroom}

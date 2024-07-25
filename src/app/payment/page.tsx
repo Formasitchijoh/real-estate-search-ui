@@ -10,13 +10,10 @@ const stripePromise = loadStripe(
 const Payment = () => {
   return (
     <>
-      <div className="W-[100vw] md:h-[100vh] flex flex-col justify-center items-center ">
+      <div className="w-[100vw] md:h-[100vh] flex flex-col justify-center items-center ">
         <div
-          className={`h-full w-full  px-4 lg:w-[40%] font-serif flex p-2 flex-col justify-start items-center md:w-[50%]`}
+          className={`h-full w-full  px-4 lg:w-[80%] font-serif flex p-2 flex-col justify-start items-center md:w-[80%]`}
         >
-          <h2 className="text-2xl py-8 lg:text-4xl text-black font-medium  tracking-tight leading-snug">
-            Make payment{" "}
-          </h2>
           <Elements stripe={stripePromise}>
             <CheckoutForm />
           </Elements>{" "}

@@ -62,21 +62,21 @@ const NavMenu = () => {
       </ul>
       <div className="hidden sm:flex justify-between items-center gap-4">
         {!user && (
-          <h3 className="hidden lg:flex">
+          <div className="hidden justify-center items-center lg:flex">
             <Link
               href={"/signup"}
-              className="text-[#7D8BA2] hover:text-[#5138ED] text-xl font-medium"
+              className="text-[#5138ED] text-xl font-medium"
             >
               SignUp
             </Link>
             <span className="text-2xl font-bold px-1">/</span>{" "}
             <Link
               href={"/login"}
-              className="text-[#7D8BA2] hover:text-[#5138ED]  text-xl font-medium"
+              className="hover:text-[#5138ED]  text-xl font-medium"
             >
               Login
             </Link>
-          </h3>
+          </div>
         )}
         <Button text="Contact Us" primary={true} />
       </div>

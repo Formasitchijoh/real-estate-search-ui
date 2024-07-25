@@ -3,7 +3,10 @@ import { menuLinks } from '../lib/data'
 import Image from 'next/image'
 import Button from './button'
 import { cn } from '../lib/utils'
+import { Router } from 'next/router'
+import { useRouter } from 'next/navigation'
 const HeroSection = () => {
+    const router = useRouter()
   return (
    <div className='w-[100vw]  lg:w-100vw] lg:py-16 mt-4 mx-auto flex flex-col md:flex-row'>
      <div 
@@ -15,10 +18,10 @@ const HeroSection = () => {
                 <h2 className='text-5xl md:text-4xl lg:text-5xl xl:text-7xl 2xl:text-8xl text-white md:text-black font-medium tracking-tight leading-tight'>
                 Let’s find a Villa that is perfect for you
                 </h2>
-                <p className='text-lg text-white md:text-black font-medium'>Ectus ipsum faucibus justo, et semper</p>
+                <p className='text-lg text-white md:text-black font-medium'>finding the perfect property for your next home</p>
             </div>
             <div className='flex px-2 gap-4 mt-8 md:mt-6'>
-                <Button text="View Properties" primary={true}/>
+                <Button text="View Properties" onClick={() => router.push('/properties')} primary={true}/>
                 <Button text="Contact Us" tetiary={true}/>
             </div>
 

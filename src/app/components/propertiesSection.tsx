@@ -20,8 +20,8 @@ const Properties = () => {
     try {
       const user = localStorage.getItem("user");
       
-      if(user){
-        const { id, token, username, role, recommendation } = JSON.parse(user as unknown as string);
+      const { id, token, username, role, recommendation } = JSON.parse(user as unknown as string);
+      if(user && recommendation){
         fetch(`http://127.0.0.1:8000/api/listings/content?user_id=${id}`, {
           method: "GET",
         })
@@ -51,7 +51,7 @@ const Properties = () => {
     <div className='w-[100vw] mx-auto py-10 md:py-16 xl:py-20 flex flex-col justify-center items-center'>
         <Button secondary text='Properties' className=' mb-4 xl:mb-6'/>
         <h2 className="text-2xl md:text-4xl lg:text-5xl text-black font-medium tracking-tight leading-snug">
-        Villas in your favorite area  </h2>
+        Properties in your favorite area  </h2>
 
         <div className='grid w-[100%] sm:w-[90%] md:grid-cols-2 px-4 md:px-0 lg:grid-cols-3 py-16 gap-6'>
         {listings &&

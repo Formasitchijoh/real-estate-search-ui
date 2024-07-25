@@ -66,12 +66,12 @@ const SignUp = () => {
     });
   };
   return (
-    <div className="W-[100vw] md:h-[100vh] flex flex-col justify-center items-center ">
+    <div className="W-[100vw] md:h-[90vh] flex flex-col justify-center items-center ">
       <div
         style={{
           boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
         }}
-        className="lg:w-[80%] w-full 2xl:h-[95vh] bg-[#f5f5f7] py-8 md:gap-4 lg:gap-6 flex justify-center items-center rounded-2xl shadow-2xl mx-auto  lg:px-8  lg:py-16"
+        className="lg:w-[80%] w-full 2xl:h-[95vh] bg-[#f5f5f7] py-4 md:gap-4 lg:gap-6 flex justify-center items-center rounded-2xl shadow-2xl mx-auto  lg:px-8  lg:py-16"
       >
         <div
           className={`h-full w-full  px-4 lg:w-[40%] font-serif flex p-2 flex-col justify-center items-center md:w-[50%]`}
@@ -167,7 +167,7 @@ const SignUp = () => {
               Continue With Email
             </button>
           </form>
-          <div className="flex w-full flex-col gap-4 justify-center items-center">
+          {/* <div className="flex w-full flex-col gap-4 justify-center items-center">
             <div className="flex w-full flex-row justify-between items-center">
               <hr className="w-[45%]" />
               <p className="px-2">or</p>
@@ -182,7 +182,7 @@ const SignUp = () => {
               <FacebookIcon />
               <span className=" text-xl md:text-2xl font-medium">Google</span>
             </button>
-          </div>
+          </div> */}
 
           <div className="flex w-full flex-col justify-start items-start pt-10">
             <p className="text-sm md:text-md">

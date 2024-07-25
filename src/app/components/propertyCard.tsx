@@ -29,7 +29,7 @@ const PropertyCard = ({
         }}
       >
         <div className="bg-white bg-opacity-10 h-[18rem] w-full flex justify-start items-start px-8 py-4">
-          <Button text="RENT" propertyStatus primary />
+          {/* <Button text="RENT" propertyStatus primary /> */}
         </div>
       </div>
       <div className="px-6 py-4 ">

@@ -72,7 +72,7 @@ const SignIn = () => {
     }
   }
   return (
-    <div className="w-[100vw] md:h-[100vh] flex flex-col justify-center items-center ">
+    <div className="w-[100vw] md:h-[90vh] flex flex-col justify-center items-center ">
       <div
         style={{
           boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
@@ -115,7 +115,7 @@ const SignIn = () => {
           <button className=" w-full py-4 bg-[#5138ED] rounded-lg text-white">
              Login
             </button>
-          <div className="flex w-full flex-col gap-4 justify-center items-center">
+          {/* <div className="flex w-full flex-col gap-4 justify-center items-center">
 
             <div className="flex w-full pt-4 flex-row justify-between items-center">
               <hr className="w-[45%]" />
@@ -131,7 +131,7 @@ const SignIn = () => {
               <FacebookIcon />
               <span className=" text-xl md:text-2xl font-medium"> Google</span>
             </button>
-          </div>
+          </div> */}
 
           <div className="flex w-full flex-col justify-start items-start pt-10">
             <p className="text-sm md:text-md">

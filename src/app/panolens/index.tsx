@@ -29,7 +29,7 @@ export const Panorama: React.FC = props => {
   useEffect(() => {
     viewer.current = pannellum.viewer(id, {
       autoLoad: true,
-      panorama: "https://pannellum.org/images/cerro-toco-0.jpg",
+      panorama: "./images/panel2.png",
       dynamicUpdate: true,
       compass: false,
       friction: 0,
