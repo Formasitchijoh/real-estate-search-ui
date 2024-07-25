@@ -15,13 +15,15 @@ const Properties = () => {
 
 
     //get users recommendation as per this property
-;
+
   useEffect(() => {
     try {
       const user = localStorage.getItem("user");
       
       const { id, token, username, role, recommendation } = JSON.parse(user as unknown as string);
+
       if(user && recommendation){
+        alert(user)
         fetch(`http://127.0.0.1:8000/api/listings/content?user_id=${id}`, {
           method: "GET",
         })
@@ -30,6 +32,7 @@ const Properties = () => {
             setlistings(result);
           });
       }else{
+        alert('in')
           fetch(`http://127.0.0.1:8000/api/listings/list/?page=${currentPage}`,{
              method: "GET",
            }).then((response ) => response.json()

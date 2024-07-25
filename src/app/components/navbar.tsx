@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CloseIcon from "../icons/CloseIcon";
 import MenuIcon from "../icons/MenuIcon";
 import { menuLinks } from "../lib/data";
@@ -7,14 +7,19 @@ import { cn } from "../lib/utils";
 import Button from "./button";
 import Logo from "./logo";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const NavMenu = () => {
   const [showMenu, setShowMenu] = useState(false);
+  const router = useRouter();
 
   const user = localStorage.getItem("user");
   const { id, token, username, role } = user
     ? JSON.parse(user as unknown as string)
     : " ";
+  useEffect(() => {
+    router.refresh();
+  }, [user]);
 
   return (
     <nav className="flex px-2 md:px-4 lg:px-16 justify-between items-center py-4 md:py-12">

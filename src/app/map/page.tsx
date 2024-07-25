@@ -28,7 +28,6 @@ const UserLocationMarker = () => {
           setUserLocation(location);
           map.setView(location, 13);
 
-          // Reverse geocoding to get city name
           fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.lat}&lon=${location.lng}`)
             .then((response) => response.json())
             .then((data) => {

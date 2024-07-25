@@ -116,7 +116,7 @@ const Property = () => {
       const { id, token, username, role } = JSON.parse(
         user as unknown as string
       );
-      //alert('user')
+      console.log(id, '\n', query, '\n', listing?.town, '\n', propertyId)
       listing &&
         fetch("http://127.0.0.1:8000/api/recommendations/list/", {
           method: "POST",
