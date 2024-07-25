@@ -4,10 +4,15 @@ import { cn } from "@/app/lib/utils";
 import FacebookIcon from "@/app/icons/FacebookIcon";
 import { UserEntity } from "@/app/lib/types";
 import { useRouter } from "next/navigation";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
+import {
+  errornotify,
+  successnotify,
+} from "@/app/properties/[propertyId]/helper";
 
 const SignUp = () => {
   const router = useRouter();
+  const [loader, setLoader] = useState(false);
 
   const [user, setUser] = useState<UserEntity>({
     userName: "",
@@ -24,46 +29,58 @@ const SignUp = () => {
   };
 
   const handleLogin = (userName: string, password: string) => {
-    fetch("http://127.0.0.1:8000/api/accounts/auth/login/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: userName?.replaceAll(" ", "_"),
-        password: password,
-      }),
-    }).then(async (response) => {
-      const result = await response.json();
-      if (response.status == 200) {
-        localStorage.clear()
-        localStorage.setItem("token", result.token);
-        localStorage.setItem('user', JSON.stringify(result))
-        router.push("/home");
-        return response.status;
-      }
-    });
+    try {
+      fetch("http://127.0.0.1:8000/api/accounts/auth/login/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: userName?.replaceAll(" ", "_"),
+          password: password,
+        }),
+      }).then(async (response) => {
+        const result = await response.json();
+        if (response.status == 200) {
+          localStorage.clear();
+          localStorage.setItem("token", result.token);
+          localStorage.setItem("user", JSON.stringify(result));
+          router.push("/home");
+          successnotify("Login successfull.");
+          return response.status;
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();        
-    fetch("http://127.0.0.1:8000/api/accounts/auth/register/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: user.userName.replaceAll(" ", "_"),
-        email: user.email,
-        password: user.password,
-        role: user.role,
-      }),
-    }).then((response) => {
-      if (response.status == 201) {
-        localStorage.setItem('user', JSON.stringify(user))
-        handleLogin(user.userName, user.password);
-      }
-    });
+    e.preventDefault();
+    try {
+      setLoader(true);
+      fetch("http://127.0.0.1:8000/api/accounts/auth/register/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: user.userName.replaceAll(" ", "_"),
+          email: user.email,
+          password: user.password,
+          role: user.role,
+        }),
+      }).then((response) => {
+        if (response.status == 201) {
+          localStorage.setItem("user", JSON.stringify(user));
+          handleLogin(user.userName, user.password);
+          setLoader(false);
+        }
+      });
+    } catch (error) {
+      setLoader(false);
+      errornotify("Error signing up.", error.mesage);
+    }
   };
   return (
     <div className="W-[100vw] md:h-[90vh] flex flex-col justify-center items-center ">

@@ -5,10 +5,12 @@ import FacebookIcon from "@/app/icons/FacebookIcon";
 import { UserEntity } from "@/app/lib/types";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from 'react-hot-toast';
+import { errornotify, successnotify } from "@/app/properties/[propertyId]/helper";
 
 const SignIn = () => {
 
     const router = useRouter()
+    const [loading, setLoading] = useState(false)
     const notify = () => toast.success('Here is your toast.',{
         duration: 4000,
         position: 'top-center',
@@ -48,6 +50,7 @@ const SignIn = () => {
   const handleSubmit = (e:React.FormEvent<HTMLFormElement>) =>{
     e.preventDefault()
     try {
+      setLoading(true)
         fetch('http://127.0.0.1:8000/api/accounts/auth/login/', {
             method:'POST',
             headers:{
@@ -62,11 +65,16 @@ const SignIn = () => {
           }).then( async(response) => {
               const result = await response.json()
               if(response.status == 200){
+                setLoading(false)
                 localStorage.setItem('user', JSON.stringify(result))
                 router.push("/home");
+                successnotify("Login successfull.");
+
               }              
           })    
     } catch (error) {
+      setLoading(false)
+      errornotify("Login Failed! please try again")
         throw new Error(error);
         
     }
@@ -113,25 +121,8 @@ const SignIn = () => {
             </li>
           </ul>
           <button className=" w-full py-4 bg-[#5138ED] rounded-lg text-white">
-             Login
+            { loading ? 'Logging in  ....' : ' Login'}
             </button>
-          {/* <div className="flex w-full flex-col gap-4 justify-center items-center">
-
-            <div className="flex w-full pt-4 flex-row justify-between items-center">
-              <hr className="w-[45%]" />
-              <p className="px-2">or</p>
-              <hr className="w-[45%]" />
-            </div>
-            <button
-              style={{
-                boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
-              }}
-              className="flex w-full py-4 bg-[#ffffff] rounded-lg shadow-xl gap-2  flex-row justify-center items-center "
-            >
-              <FacebookIcon />
-              <span className=" text-xl md:text-2xl font-medium"> Google</span>
-            </button>
-          </div> */}
 
           <div className="flex w-full flex-col justify-start items-start pt-10">
             <p className="text-sm md:text-md">

@@ -134,6 +134,7 @@ const Property = () => {
           .then((result) => { 
             if(result){
               console.log(JSON.stringify(result))
+              successnotify("Your Preference has been updated.");
               setNewRecommendation(true)
             }
           });
@@ -158,11 +159,11 @@ const Property = () => {
     }).then(async (result) => {
       const response = await result.json();
       if (result.status) {
-        successnotify();
+        successnotify("Item Bookmarked successfully.");
       }
     });
     }else{
-      errornotify()
+      errornotify("Please login to make a bookmark")
       router.push('/login')
     }
   };

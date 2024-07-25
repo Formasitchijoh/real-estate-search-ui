@@ -58,8 +58,8 @@ const VirtualTour: React.FC<VirtualTourProps> = ({ imageUrls }) => {
 
 export default VirtualTour;
 
-export const successnotify = () =>
-  toast.success("Item Bookmarked successfully.", {
+export const successnotify = (text:string) =>
+  toast.success(text, {
     duration: 4000,
     position: "top-center",
     // Custom Icon
@@ -77,14 +77,12 @@ export const successnotify = () =>
       "aria-live": "polite",
     },
   });
-export const errornotify = () =>
-  toast.error("Please login to make a bookmark.", {
+export const errornotify = (text:string) =>
+  toast.error(text, {
     duration: 4000,
     position: "top-center",
     // Custom Icon
     icon: "👏",
-
-    // Change colors of success/error/loading icon
     iconTheme: {
       primary: "#000",
       secondary: "#fff",
