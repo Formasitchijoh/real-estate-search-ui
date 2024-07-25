@@ -27,7 +27,7 @@ const AboutSection = () => {
         </div>
       </div>
       <div className='hidden md:block w-1/2'>
-    <Image src={'/about.png'} alt='hero image' width={1062} height={582} className="contain aspect-square"/>
+    <Image src={'/img6.jpg'} alt='hero image' width={1062} height={582} className="contain aspect-square"/>
 
     </div>
    </div>

@@ -10,7 +10,7 @@ const HeroSection = () => {
   return (
    <div className='w-[100vw]  lg:w-100vw] lg:py-16 mt-4 mx-auto flex flex-col md:flex-row'>
      <div 
-    className={cn('relative bg-no-repeat bg-cover bg-[url(/heroImg.png)] md:bg-gradient-to-br md:bg-opacity-0 md:w-1/2 xl:pl-16')}
+    className={cn('relative bg-no-repeat bg-cover bg-[url(/hero.jpg)] md:bg-gradient-to-br md:bg-opacity-0 md:w-1/2 xl:pl-16')}
     >
         <div className='bg-white py-16 md:py-4 lg:py-8 xl:py-16 bg-opacity-0'>
             <div className='flex flex-col justify-center items-start p-2 gap-8 md:gap-4 lg:gap-8'>
@@ -28,7 +28,7 @@ const HeroSection = () => {
         </div>
     </div>
     <div className='hidden md:block w-1/2'>
-    <Image src={'/heroImg.png'} alt='hero image' width={1020} height={540}/>
+    <Image src={'/img1.jpg'} alt='hero image' width={1020} height={540}/>
 
     </div>
    </div>
