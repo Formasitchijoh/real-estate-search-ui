@@ -62,7 +62,7 @@ const Home = () => {
         })
           .then((response) => response.json())
           .then((result) => {
-            setRecommendations(result);
+            setlistings(result);
             console.log("\n\nresult\n\n", result);
           });
       }
@@ -92,6 +92,7 @@ const Home = () => {
                 price={listing.price}
                 location={`${listing.town}, ${listing.location} `}
                 reactions={listing.reactions}
+                pricepermonth={listing.pricepermonth}
               />
             </Link>
           ))}

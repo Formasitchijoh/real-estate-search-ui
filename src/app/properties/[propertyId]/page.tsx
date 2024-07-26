@@ -320,6 +320,7 @@ const Property = () => {
                 price={listing.price}
                 location={`${listing.town}, ${listing.location} `}
                 reactions={listing.reactions}
+                pricepermonth={listing.pricepermonth}
               />
             </Link>
           ))}

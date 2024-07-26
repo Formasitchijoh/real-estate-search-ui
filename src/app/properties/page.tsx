@@ -254,11 +254,11 @@ const Page = () => {
                 </button>
                 {suggestions?.listing_type_suggest__completion[0].options
                   .length > 0 && (
-                  <ul className="absolute z-50 top-[105%] w-[100%] mx-auto bg-[#eee] px-5 mr-5">
+                  <ul className="absolute z-50 backdrop-blur-sm bg-white/80 top-[105%] w-[100%] mx-auto bg-[#eee] px-5 mr-5">
                     {suggestions?.listing_type_suggest__completion[0].options.map(
                       (suggestion) => (
                         <li
-                          className="cursor-pointer"
+                          className="cursor-pointer py-1"
                           key={suggestion?._id}
                           onClick={() =>
                             selectSuggestion(suggestion._source.listing_type)
@@ -272,17 +272,17 @@ const Page = () => {
                 )}
                 {suggestions?.title_suggest__completion[0].options.length >
                   0 && (
-                  <ul className="absolute z-50 top-[105%] w-[100%] mx-auto px-5  bg-[#eee] mr-5">
+                  <ul className="absolute z-50  backdrop-blur-sm bg-white/80 top-[105%] w-[100%] mx-auto px-5  bg-[#eee] mr-5">
                     {suggestions?.title_suggest__completion[0].options.map(
                       (suggestion) => (
                         <li
-                          className="cursor-pointer"
+                          className="cursor-pointer py-1"
                           key={suggestion?._id}
                           onClick={() =>
                             selectSuggestion(suggestion._source.title)
                           }
                         >
-                          {suggestion._source.title}
+                         {  suggestion._source.title?.charAt(0) == 0 ? "1" + suggestion._source.title.slice(1) : suggestion._source.title}
                         </li>
                       )
                     )}
@@ -290,11 +290,11 @@ const Page = () => {
                 )}
                 {suggestions?.town_suggest__completion[0].options.length >
                   0 && (
-                  <ul className="absolute z-50 top-[105%] w-[100%] mx-auto px-5  bg-[#eee] mr-5">
+                  <ul className="absolute z-50 backdrop-blur-sm bg-white/80 top-[105%] w-[100%] mx-auto px-5  bg-[#eee] mr-5">
                     {suggestions?.town_suggest__completion[0].options.map(
                       (suggestion) => (
                         <li
-                          className="cursor-pointer"
+                          className="cursor-pointer py-1"
                           key={suggestion?._id}
                           onClick={() =>
                             selectSuggestion(suggestion._source.town)
@@ -308,11 +308,11 @@ const Page = () => {
                 )}
                 {suggestions?.location_suggest__completion[0].options.length >
                   0 && (
-                  <ul className="absolute z-50 top-[105%] w-[100%] px-5  mx-auto bg-[#eee] mr-5">
+                  <ul className="absolute z-50 backdrop-blur-sm bg-white/80 top-[105%] w-[100%] px-5  mx-auto bg-[#eee] mr-5">
                     {suggestions?.location_suggest__completion[0].options.map(
                       (suggestion) => (
                         <li
-                          className="cursor-pointer"
+                          className="cursor-pointer py-1"
                           key={suggestion?._id}
                           onClick={() =>
                             selectSuggestion(suggestion._source.location)
@@ -458,7 +458,7 @@ const Page = () => {
                   <option value="80000">80000</option>
                   <option value="100000">100000</option>
                 </select>
-                <div className="cols-span-2 py-4 md:col-span-3 flex justify-between items-center w-full">
+                <div className="cols-span-2 py-1 md:col-span-3 flex justify-between items-center w-full">
                   <span className="text-sm text-orange-500 font-medium">
                     {" "}
                     {listings && listings.length}{" "}
