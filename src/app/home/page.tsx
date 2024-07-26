@@ -24,6 +24,7 @@ const Home = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [newRecommendation, setNewRecommendation] = useState(false)
   const [recommendations, setRecommendations] = useState<Array<any>>();
+  const [usersRecommendation, setUsersRecommendation] = useState<any>();
 
   const router = useRouter();
 
@@ -65,6 +66,14 @@ const Home = () => {
             setlistings(result);
             console.log("\n\nresult\n\n", result);
           });
+
+          fetch(`http://127.0.0.1:8000/api/recommendations/rec?user_id=${id}`, {
+            method: "GET",
+          })
+            .then((response) => response.json())
+            .then((result) => {
+              setUsersRecommendation(result);
+            });
       }
     } catch (error) {
       console.log(error);
@@ -77,6 +86,7 @@ const Home = () => {
       <AboutSection/>
       <div className='w-[100vw] mx-auto py-10 md:py-16 xl:py-20 flex flex-col justify-center items-center'>
         <Button secondary text='Properties' className=' mb-4 xl:mb-6'/>
+       
         <h2 className="text-2xl md:text-4xl lg:text-5xl text-black font-medium tracking-tight leading-snug">
         Properties in your favorite area  </h2>
 
@@ -93,10 +103,49 @@ const Home = () => {
                 location={`${listing.town}, ${listing.location} `}
                 reactions={listing.reactions}
                 pricepermonth={listing.pricepermonth}
+                listing_type={listing.listing_type}
               />
             </Link>
           ))}
         </div>
+        {usersRecommendation && (
+        <>
+          <div className="md:py-10 w-[100%] sm:w-[90%] px-4 lg:px-0 lg:w-[90%] mx-auto ">
+          <h2 className="text-2xl md:text-4xl lg:text-5xl text-black font-medium tracking-tight leading-snug">
+          People Also Like{" "}
+            </h2>
+          </div>
+
+          <div className="grid w-full  lg:w-[90vw] mx-auto py-8 md:gap-4  flex-col md:flex-row md:grid-cols-2 px-4 lg:px-0 lg:grid-cols-3 pb-16 gap-6">
+            {usersRecommendation &&
+              usersRecommendation?.map((listing, index) => (
+                <Link
+                  key={index}
+                  href={`/properties/${
+                    listing.listing ? listing.listing : listing.id
+                  }`}
+                >
+                  <PropertyCard
+                    image={
+                      listing.listing_image
+                        ? listing.listing_image[0]?.image
+                        : listing.images[0]
+                    }
+                    title={listing.title}
+                    bedrooms={listing.bedroom}
+                    bathrooms={listing.bathrooms}
+                    price={listing.price}
+                    location={`${listing.town}, ${listing.location} `}
+                    reactions={listing.reactions}
+                    pricepermonth={listing.pricepermonth}
+                    listing_type={listing.listing_type}
+
+                  />
+                </Link>
+              ))}
+          </div>
+        </>
+      )}
         <div className="flex w-full gap-3 justify-center items-center">
             <Button quatenary text="Explore Properties" />
             <Button icon text="Contact Agent" />

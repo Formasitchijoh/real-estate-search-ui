@@ -319,7 +319,7 @@ const Property = () => {
 
           <div className="grid w-full  lg:w-[90vw] mx-auto py-8 md:gap-4  flex-col md:flex-row md:grid-cols-2 px-4 lg:px-0 lg:grid-cols-3 pb-16 gap-6">
             {usersRecommendation &&
-              usersRecommendation?.slice(0, 6)?.map((listing, index) => (
+              usersRecommendation?.map((listing, index) => (
                 <Link
                   key={index}
                   href={`/properties/${
@@ -339,6 +339,8 @@ const Property = () => {
                     location={`${listing.town}, ${listing.location} `}
                     reactions={listing.reactions}
                     pricepermonth={listing.pricepermonth}
+                    listing_type={listing.listing_type}
+
                   />
                 </Link>
               ))}
@@ -374,6 +376,8 @@ const Property = () => {
                 location={`${listing.town}, ${listing.location} `}
                 reactions={listing.reactions}
                 pricepermonth={listing.pricepermonth}
+                listing_type={listing.listing_type}
+
               />
             </Link>
           ))}

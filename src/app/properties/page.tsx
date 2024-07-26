@@ -542,6 +542,8 @@ useEffect(() =>{
                   reactions={listing.reactions}
                   score={ scores ? scores[index] : 0}
                   pricepermonth={listing.pricepermonth}
+                  listing_type={listing.listing_type}
+
                 />
               </Link>
             ))}

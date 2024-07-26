@@ -66,6 +66,8 @@ const Properties = () => {
                 price={listing.price}
                 location={`${listing.town}, ${listing.location} `}
                 reactions={listing.reactions}
+                listing_type={listing.listing_type}
+
               />
             </Link>
           ))}

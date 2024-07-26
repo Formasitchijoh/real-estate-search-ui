@@ -12,6 +12,7 @@ const PropertyCard = ({
   reactions,
   score,
   pricepermonth,
+  listing_type
 }: {
   image?: string;
   title?: string;
@@ -22,6 +23,7 @@ const PropertyCard = ({
   reactions?: number;
   score?: number;
   pricepermonth?: number;
+  listing_type?:string
 }) => {
   return (
     <div className=" shadow-lg rounded-b-2xl ">
@@ -39,7 +41,7 @@ const PropertyCard = ({
         <h3 className="lg:text-sm xl:text-xl font-medium"> {  title?.charAt(0) == 0 ? "1" + title.slice(1) : title}</h3>
         <span className="text-xl text-[#5138ED] py-3 inline-block font-medium ">
           FCFA {price?.toString()?.length <= 3 ? price + "000" : price} /{" "}
-          {pricepermonth}
+          {listing_type =='Guest House' ? 'per night' : pricepermonth}
         </span>
         <div className="flex place-items-center pt-2 pb-3 gap-4">
           <Image src={"/location.png"} alt="location" width={16} height={20} />
