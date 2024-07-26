@@ -21,6 +21,7 @@ const Page = () => {
   const [searchItems, setSearchItems] = useState();
   const [townsLocation, setTownsLocation] = useState(null);
   const [recommendations, setRecommendations] = useState<Array<any>>();
+  const [selectSuggestion, setSelectSuggestion] = useState('')
   const [queryParams, setQueryParams] = useState({
     town: "",
     location: "",
@@ -204,11 +205,13 @@ const Page = () => {
       });
   };
 
-  const selectSuggestion = (suggestion: string) => {
-    setSearchQuery(suggestion);
+
+useEffect(() =>{
+    if(selectSuggestion){
+      setSearchQuery(selectSuggestion);
 
     // alert(suggestion)
-    let base_url = `http://127.0.0.1:8000/api/listings/listing_search?query=${searchQuery}`;
+    let base_url = `http://127.0.0.1:8000/api/listings/listing_search?query=${selectSuggestion}`;
     console.log("\n\n na me this so di log\n\n", base_url);
     fetch(base_url, {
       method: "GET",
@@ -217,7 +220,9 @@ const Page = () => {
       .then((result) => {
         setlistings(result);
       });
-  };
+    }
+
+},[selectSuggestion])
   return (
     <div className="pb-16">
       <div className="w-[100vw]">
@@ -232,7 +237,7 @@ const Page = () => {
                 <SearchIcon />
                 <input
                   type="search"
-                  value={searchQuery ? searchQuery : query}
+                  value={searchQuery ? searchQuery?.charAt(0) == 0 ? "1" + searchQuery.slice(1) : searchQuery: query}
                   onChange={(e) => handleInputChange(e)}
                   className="h-full w-full focus:outline-none px-2 bg-[#eee] "
                 />
@@ -261,7 +266,7 @@ const Page = () => {
                           className="cursor-pointer py-1"
                           key={suggestion?._id}
                           onClick={() =>
-                            selectSuggestion(suggestion._source.listing_type)
+                            setSelectSuggestion(suggestion._source.listing_type)
                           }
                         >
                           {suggestion._source.listing_type}
@@ -279,7 +284,7 @@ const Page = () => {
                           className="cursor-pointer py-1"
                           key={suggestion?._id}
                           onClick={() =>
-                            selectSuggestion(suggestion._source.title)
+                            setSelectSuggestion(suggestion._source.title)
                           }
                         >
                          {  suggestion._source.title?.charAt(0) == 0 ? "1" + suggestion._source.title.slice(1) : suggestion._source.title}
@@ -297,7 +302,7 @@ const Page = () => {
                           className="cursor-pointer py-1"
                           key={suggestion?._id}
                           onClick={() =>
-                            selectSuggestion(suggestion._source.town)
+                            setSelectSuggestion(suggestion._source.town)
                           }
                         >
                           {suggestion._source.town}
@@ -315,7 +320,7 @@ const Page = () => {
                           className="cursor-pointer py-1"
                           key={suggestion?._id}
                           onClick={() =>
-                            selectSuggestion(suggestion._source.location)
+                            setSelectSuggestion(suggestion._source.location)
                           }
                         >
                           {suggestion._source.location}
