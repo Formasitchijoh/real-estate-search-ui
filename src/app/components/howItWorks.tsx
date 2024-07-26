@@ -10,7 +10,7 @@ const HowItWorksSection = () => {
     How it works </h2>
 
     <p className=' text-sm w-[80%] sm:w-[60%] lg:w-[50%] md:text-md lg:text-lg text-center inline-block pt-6 text-black font-normal'>
-    Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis .
+    Discover your ideal home with ease and confidence using our streamlined process.
     </p>
 
 

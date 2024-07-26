@@ -19,6 +19,7 @@ const Payment = () => {
           </Elements>{" "}
         </div>
       </div>
+      
     </>
   );
 };

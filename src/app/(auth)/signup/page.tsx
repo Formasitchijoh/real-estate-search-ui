@@ -96,7 +96,7 @@ const SignUp = () => {
           <h2 className="text-2xl lg:text-4xl text-black font-medium  tracking-tight leading-snug">
             Create Your Account{" "}
           </h2>
-          <p className="text-sm  text-[#7D8BA2]">start your 30 free trial</p>
+          {/* <p className="text-sm  text-[#7D8BA2]">start your 30 free trial</p> */}
 
           <form action="" className="w-full" onSubmit={handleSubmit}>
             <ul className="py-8 w-full  list-none flex flex-col place-content-center gap-4 md:gap-6">
@@ -181,7 +181,7 @@ const SignUp = () => {
               </li>
             </ul>
             <button className=" w-full py-4 bg-[#5138ED] rounded-lg text-white">
-              Continue With Email
+             { loader ? ' Creating your Account ...' : ' Continue With Email'}
             </button>
           </form>
           {/* <div className="flex w-full flex-col gap-4 justify-center items-center">

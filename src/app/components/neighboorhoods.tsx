@@ -29,8 +29,7 @@ const Neighboorhoods = () => {
       </h2>
 
       <p className=" text-sm w-[80%] sm:w-[60%] lg:w-[50%] md:text-md lg:text-lg text-center inline-block pt-6 text-black font-normal">
-        Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-        sint. Velit officia consequat duis .{" "}
+         .{" "}
       </p>
 
       <div className="grid w-[100%] sm:w-[85%] md:w-[80%] lg:w-[80%] justify-center items-center  sm:grid-cols-2 md:px-0 xl:grid-cols-3 py-20 gap-8">
