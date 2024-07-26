@@ -190,7 +190,7 @@ const Property = () => {
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    fetchListings();
+    //fetchListings();
   };
 
   return (

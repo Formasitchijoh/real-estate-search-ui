@@ -17,12 +17,11 @@ h2{
 .tour__head{
     padding-top: 10vh;
     text-align: center;
-    margin-bottom: 50px;
+    /* margin-bottom: 50px; */
 }
 
 .image-container{
-    height: 26.190rem;
-
+    height: 36.190rem;
     position: relative;
     width: 78%;
     display: block;

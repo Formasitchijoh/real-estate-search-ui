@@ -1,12 +1,14 @@
-const panorama = new PANOLENS.ImagePanorama( 'images/loby1.jpeg' );
-const panorama2 = new PANOLENS.ImagePanorama('images/loby2.jpeg');
-const panorama1 = new PANOLENS.ImagePanorama('images/panel1.jpeg');
+const panorama = new PANOLENS.ImagePanorama( 'images/loby1.jprg' );
+const panorama2 = new PANOLENS.ImagePanorama('images/img2.jpg');
+const panorama1 = new PANOLENS.ImagePanorama('images/loby2.jpeg');
 let imageContainer = document.querySelector('.image-container')
 
 
 var infospotPositions = [
     new THREE.Vector3(-2136.06, 16.30, 890.14),
     new THREE.Vector3(-3136.06, 296.30, -4290.14),
+    new THREE.Vector3(-2136.06, 16.30, 890.14),
+
     
   ];
 
@@ -15,9 +17,9 @@ const viewer = new PANOLENS.Viewer({
     autoRotate: true,
     autoRotateSpeed: 0.3,
     controlBar: true,
-    controlButtons: [],            // Buttons array in the control bar. Default to ['fullscreen', 'setting', 'video']
-    autoHideControlBar: false,        // Auto hide control bar
-    autoHideInfospot: true,            // Auto hide infospots
+   //controlButtons: [],            // Buttons array in the control bar. Default to ['fullscreen', 'setting', 'video']
+   // autoHideControlBar: false,        // Auto hide control bar
+     autoHideInfospot: true,            // Auto hide infospots
     horizontalView: false,            // Allow only horizontal camera control
     cameraFov: 60,                // Camera field of view in degree
     reverseDragging: false,            // Reverse orbit control direction
