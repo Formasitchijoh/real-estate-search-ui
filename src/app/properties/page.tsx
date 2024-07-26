@@ -38,7 +38,6 @@ const Page = () => {
         response.json().then((result) => {
           setlistings(result.results);
           // alert('in')
-          console.log("\n\nresult hdhfhsfjsjfnsjfg\n\n", result.results);
           setTotalPages(Math.ceil(result.count / result.results.length));
         })
       );
@@ -170,6 +169,8 @@ const Page = () => {
         setlistings(result.Listings);
         setSearch(true);
         setScores(result.Scores);
+        console.log("\n\n\n scrrrrrrrrr", result);
+        
       });
   };
 
@@ -245,6 +246,7 @@ const Page = () => {
                   </span>
                 </div>
                 <button
+                type="submit"
                   onClick={handleListingsSearch}
                   className="h-[70%] border-gray-100 bg-[#27262c] text-white md:border-[5px] md:hidden shadow-2xl rounded-lg text-xs flex w-[40%] justify-center items-center "
                 >
@@ -469,6 +471,7 @@ const Page = () => {
                     </span>
                     <button
                       type="submit"
+                      onClick={handleFullSearch}
                       className=" px-8 py-2 border-gray-100 bg-orange-500 font-bold text-white  shadow-2xl rounded-lg text-xs flex w-[40%] justify-center items-center "
                     >
                       Search
@@ -479,6 +482,7 @@ const Page = () => {
             </form>
             {!showAdvanceSearch && (
               <button
+              type="submit"
                 onClick={handleListingsSearch}
                 className={cn(
                   "text-white bg-[#27262c] hidden md:block w-[20%] h-10 md:h-12 md:w-auto text-xs px-2 md:px-8 md:py-2 text-md rounded-2xl font-bold",
@@ -531,6 +535,8 @@ const Page = () => {
                   price={listing.price}
                   location={`${listing.town}, ${listing.location} `}
                   reactions={listing.reactions}
+                  score={ scores ? scores[index] : 0}
+                  pricepermonth={listing.pricepermonth}
                 />
               </Link>
             ))}

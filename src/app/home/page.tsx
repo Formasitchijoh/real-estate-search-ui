@@ -101,9 +101,9 @@ const Home = () => {
             <Button icon text="Contact Agent" />
           </div>
     </div>      <HowItWorksSection/>
-      {/* <Neighboorhoods/> */}
+      <Neighboorhoods/>
       <WorkWithUs/>
-      <Testimonials/>
+      {/* <Testimonials/> */}
     </div>
   );
 };
