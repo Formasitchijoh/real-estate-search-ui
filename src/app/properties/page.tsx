@@ -90,6 +90,8 @@ const Page = () => {
       ).then((response) =>
         response.json().then((result) => {
           setTownsLocation(result.locations);
+          console.log("\n\n\n totototototooto", result.locations);
+          
         })
       );
     } catch (error) {
@@ -140,6 +142,8 @@ const Page = () => {
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const query_name = e.target.name;
     setQueryParams((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    console.log("\n\n\nlocations and towns and towns \n\n\n\\n\n", e.target.value);
+
     if (query_name == "town") {
       try {
         fetch(
@@ -150,6 +154,8 @@ const Page = () => {
         ).then((response) =>
           response.json().then((result) => {
             setTownsLocation(result.locations);
+            console.log("\n\n\nlocations and locations \n\n\n\\n\n", result.locations);
+            
           })
         );
       } catch (error) {
@@ -170,7 +176,6 @@ const Page = () => {
         setlistings(result.Listings);
         setSearch(true);
         setScores(result.Scores);
-        console.log("\n\n\n scrrrrrrrrr", result);
         
       });
   };
